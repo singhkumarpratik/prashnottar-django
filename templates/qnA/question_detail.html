@@ -1,0 +1,19 @@
+<h1>{{question}}</h1>
+<hr>
+<b>{{question.answer_set.count}} Answers</b>
+<hr>
+{% for answer in question.answer_set.all %}
+
+{% if answer.is_anonymous %}
+<i>Anonymous</i>
+{% else %}
+<p>{{answer.user.first_name}} {{answer.user.last_name}}
+    {% endif %}
+    on {{answer.created_date}}
+    {% if answer.created_date != answer.updated_date %}
+    (Edited at {{answer.updated_date}})
+    {% endif %}
+</p>
+{{answer.ans}}
+<hr>
+{% endfor %}

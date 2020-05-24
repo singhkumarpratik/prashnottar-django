@@ -1,8 +1,17 @@
 {% for question in questions %}
-<h4>{{question}} - {{question.user.first_name}} on {{question.created_date}}</h4>
+<a href="{% url 'question_detail' question.slug %}">
+    <h4>{{question}} - {{question.user.first_name}} on {{question.created_date}}</h4>
+</a>
 <hr>
 <p>{{question.answer_set.all.0.ans}}</p>
-<h4>By {{question.answer_set.all.0.user.first_name}} on {{question.answer_set.all.0.created_date}}
+<h4>By
+
+    {% if question.answer_set.all.0.is_anonymous %}
+    <i>Anonymous</i>
+    {% else %}
+    {{question.answer_set.all.0.user.first_name}} {{question.answer_set.all.0.user.last_name}}
+    {% endif %}
+    on {{question.answer_set.all.0.created_date}}
     {% if question.answer_set.all.0.created_date != question.answer_set.all.0.updated_date %}
     (Edited at {{question.answer_set.all.0.updated_date}})
 </h4>
