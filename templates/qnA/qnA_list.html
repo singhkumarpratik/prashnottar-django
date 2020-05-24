@@ -1,0 +1,12 @@
+{% for question in questions %}
+<h4>{{question}} - {{question.user.first_name}} on {{question.created_date}}</h4>
+<hr>
+<p>{{question.answer_set.all.0.ans}}</p>
+<h4>By {{question.answer_set.all.0.user.first_name}} on {{question.answer_set.all.0.created_date}}
+    {% if question.answer_set.all.0.created_date != question.answer_set.all.0.updated_date %}
+    (Edited at {{question.answer_set.all.0.updated_date}})
+</h4>
+{% endif %}
+
+
+{% endfor %}
