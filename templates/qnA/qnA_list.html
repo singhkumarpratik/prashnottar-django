@@ -1,5 +1,5 @@
 {% for question in questions %}
-<a href="{% url 'question_detail' question.slug %}">
+<a href="{% url 'qnA:question_detail' question.slug %}">
     <h4>{{question}} - {{question.user.first_name}} on {{question.created_date}}</h4>
 </a>
 <hr>
