@@ -19,11 +19,9 @@ class QnaListView(ListView):
 
 
 def vote(request, question_id, slug=None):
-    x = Answer.objects.get(pk=question_id)
     is_question_detail = False
     # if a specific question's page is opened
     if slug is not None:
-        print("slug")
         is_question_detail = True
         question = Answer.objects.get(pk=question_id)
     else:

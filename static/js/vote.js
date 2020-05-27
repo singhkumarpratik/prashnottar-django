@@ -1,21 +1,18 @@
 $(document).ready(function () {
     $(".score-form").each(function (index) {
         var question_pk = $(this).attr("data-pk");
-        console.log(question_pk);
         var url = question_pk + "/vote";
-        console.log(url)
         $.ajax({
             type: 'GET',
             url: url,
             data: { "status": question_pk },
             success: function (response) {
-                console.log(response["has_upvoted"]);
                 if (response["is_question_detail"]) {
                     if (response["has_upvoted"]) {
-                        $(".Up" + question_pk).attr('src', '../static/imgs/qnA/caret-up-square-fill.svg');
+                        $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square-fill.svg');
                     }
                     if (response["has_downvoted"]) {
-                        $(".Down" + question_pk).attr('src', '../static/imgs/qnA/caret-down-square-fill.svg');
+                        $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square-fill.svg');
                     }
                 }
                 else {
@@ -44,12 +41,12 @@ $('input[name="up"]').click(function (e) {
                 if (response["data"]["is_question_detail"]) {
                     if (response["data"]["has_upvoted"]) {
                         console.log("User upvoted");
-                        $(".Up" + question_pk).attr('src', '../static/imgs/qnA/caret-up-square-fill.svg');
-                        $(".Down" + question_pk).attr('src', '../static/imgs/qnA/caret-down-square.svg');
+                        $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square-fill.svg');
+                        $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square.svg');
                     }
                     else {
                         console.log("User upvote removed");
-                        $(".Up" + question_pk).attr('src', '../static/imgs/qnA/caret-up-square.svg');
+                        $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square.svg');
                     }
                 }
                 else {
@@ -88,12 +85,12 @@ $('input[name="down"]').click(function (e) {
                 if (response["data"]["is_question_detail"]) {
                     if (response["data"]["has_downvoted"]) {
                         console.log("User downvoted");
-                        $(".Down" + question_pk).attr('src', '../static/imgs/qnA/caret-down-square-fill.svg');
-                        $(".Up" + question_pk).attr('src', '../static/imgs/qnA/caret-up-square.svg');
+                        $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square-fill.svg');
+                        $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square.svg');
                     }
                     else {
                         console.log("User downvote removed");
-                        $(".Down" + question_pk).attr('src', '../static/imgs/qnA/caret-down-square.svg');
+                        $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square.svg');
                     }
                 }
                 else {
