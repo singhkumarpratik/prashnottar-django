@@ -1,7 +1,15 @@
+{% load static %}
 {% for question in questions %}
-<a href="{% url 'qnA:question_detail' question.slug %}">
+<a href="{% url 'qnA:question_detail' question.slug %}" target="_blank">
     <h4>{{question}} - {{question.user.first_name}} on {{question.created_date}}</h4>
 </a>
+<h4 id="score{{question.pk}}">{{question.vote_score}}</h4>
+<div class="score-form" data-pk="{{question.pk}}">
+    <input type="image" value="Up" name="up" class="Up{{question.pk}} upvote" id="upvote" data-pk="{{question.pk}}"
+        src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
+    <input type="image" value="Down" name="down" class="Down{{question.pk}} downvote" data-pk="{{question.pk}}"
+        src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
+</div>
 <hr>
 <p>{{question.answer_set.all.0.ans}}</p>
 <h4>By
@@ -17,5 +25,7 @@
 </h4>
 {% endif %}
 
-
 {% endfor %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="{% static 'js/vote.js' %}"></script>

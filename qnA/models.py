@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from autoslug import AutoSlugField
+from vote.models import VoteModel
 from users import models as userModels
 
 
@@ -12,7 +13,7 @@ class Topic(models.Model):
         return self.topic
 
 
-class Question(models.Model):
+class Question(VoteModel, models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=4000, blank=True)
     slug = AutoSlugField(populate_from="title", unique=True)
@@ -31,9 +32,9 @@ class Question(models.Model):
         return self.title
 
 
-class Answer(models.Model):
+class Answer(VoteModel, models.Model):
     class Meta:
-        ordering = ["-updated_date"]
+        ordering = ["-vote_score"]
 
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     ans = models.TextField(max_length=4000)

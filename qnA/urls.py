@@ -5,4 +5,6 @@ app_name = "qnA"
 urlpatterns = [
     path("", views.QnaListView.as_view(), name="home"),
     path("<slug:slug>/", views.QuestionDetailView.as_view(), name="question_detail"),
+    path("<int:question_id>/vote", views.vote, name="question-vote"),
+    path("<slug:slug>/<int:question_id>/vote", views.vote, name="vote"),
 ]
