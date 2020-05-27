@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "qnA",
 ]
 
-THIRD_PARTY_APPS = ["vote"]
+THIRD_PARTY_APPS = ["vote", "django_summernote"]
 INSTALLED_APPS += THIRD_PARTY_APPS
 
 MIDDLEWARE = [
@@ -118,3 +118,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+X_FRAME_OPTIONS = "SAMEORIGIN"
+

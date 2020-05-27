@@ -1,8 +1,9 @@
-from django.shortcuts import render
-from django.shortcuts import redirect
-from django.http import HttpResponse, JsonResponse
-from django.views.generic import ListView, DetailView
+from django.shortcuts import render, redirect
+from django.urls import reverse
+from django.http import JsonResponse
+from django.views.generic import ListView, DetailView, FormView
 from .models import Question, Answer
+from .forms import QuestionForm
 
 
 class QnaListView(ListView):
@@ -85,3 +86,15 @@ def vote(request, question_id, slug=None):
 
 class QuestionDetailView(DetailView):
     queryset = Question.objects.all()
+
+
+class AskQuestionView(FormView):
+    template_name = "qnA/ask_question.html"
+    form_class = QuestionForm
+
+    def form_valid(self, form):
+        pk = self.kwargs.get("pk")
+        question = form.save(commit=False)
+        question.user = self.request.user
+        question.save()
+        return redirect(reverse("qnA:question_detail", kwargs={"slug": question.slug}))

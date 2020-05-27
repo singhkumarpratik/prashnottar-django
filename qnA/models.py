@@ -21,12 +21,11 @@ class Question(VoteModel, models.Model):
     is_anonymous = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-    topics = models.ManyToManyField(Topic)
+    topics = models.ManyToManyField(Topic, blank=True)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
         super(Question, self).save(*args, **kwargs)
-        print(self.slug)
 
     def __str__(self):
         return self.title

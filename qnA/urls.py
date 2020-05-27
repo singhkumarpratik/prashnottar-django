@@ -10,5 +10,6 @@ urlpatterns = [
         name="question_detail",
     ),
     path("<int:question_id>/vote", views.vote, name="question-vote"),
-    path("question/<slug:slug>/<int:question_id>/vote", views.vote, name="vote"),
+    path("question/<slug:slug>/<int:question_id>/vote/", views.vote, name="vote"),
+    path("ask-question/", views.AskQuestionView.as_view(), name="ask-question"),
 ]
