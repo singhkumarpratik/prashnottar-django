@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from django.urls import reverse
 from autoslug import AutoSlugField
 from vote.models import VoteModel
 from users import models as userModels
@@ -41,6 +42,9 @@ class Answer(VoteModel, models.Model):
     is_anonymous = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse("qnA:question_detail", kwargs={"slug": self.question.slug,},)
 
     def __str__(self):
         return f"{self.user.first_name} on {self.created_date}"

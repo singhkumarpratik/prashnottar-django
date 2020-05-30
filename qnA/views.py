@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views.generic import ListView, DetailView, FormView
 from .models import Question, Answer
 from .forms import QuestionForm
+from comments.models import MyComment
 
 
 class QnaListView(ListView):
@@ -20,20 +21,25 @@ class QnaListView(ListView):
 
 
 def vote(request, question_id, slug=None):
-    is_question_detail = False
-    # if a specific question's page is opened
-    if slug is not None:
-        is_question_detail = True
-        question = Answer.objects.get(pk=question_id)
-    else:
-        question = Question.objects.get(pk=question_id)
-    # 0 is upvote, 1 is downvote
-    user_votes_up = question.votes.user_ids(0)
-    user_votes_down = question.votes.user_ids(1)
-    check = {"user_id": request.user.id}
     # check if user is logged in. If not redirect to login page
     if request.user.is_authenticated:
         if request.is_ajax and request.method == "GET":
+            is_question_detail = False
+            # if a specific question's page is opened
+            if slug is not None:
+                is_question_detail = True
+                # print(request.GET.get("is_comment"), "hii")
+                if request.GET.get("is_comment") == "True":
+                    question = MyComment.objects.get(pk=question_id)
+                    print(question)
+                else:
+                    question = Answer.objects.get(pk=question_id)
+            else:
+                question = Question.objects.get(pk=question_id)
+            # 0 is upvote, 1 is downvote
+            user_votes_up = question.votes.user_ids(0)
+            user_votes_down = question.votes.user_ids(1)
+            check = {"user_id": request.user.id}
             # get the value passed from the form
             if request.GET.get("up"):
                 # check if user has already upvoted, if yes, remove user's upvote
@@ -60,10 +66,13 @@ def vote(request, question_id, slug=None):
                     }
                 )
             if slug is not None:
-                question = Answer.objects.get(pk=question_id)
+                if request.GET.get("is_comment") == "True":
+                    question = MyComment.objects.get(pk=question_id)
+                    print(question)
+                else:
+                    question = Answer.objects.get(pk=question_id)
             else:
                 question = Question.objects.get(pk=question_id)
-            # print(question.votes.exists(request.user.id, action=0))
             has_upvoted = question.votes.exists(request.user.id, action=0)
             has_downvoted = question.votes.exists(request.user.id, action=1)
             return JsonResponse(

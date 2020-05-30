@@ -1,8 +1,18 @@
+{% extends "base.html" %}
 {% load static %}
+{% load i18n %}
+{% load comments %}
+{% load comments_xtd %}
+{% block content %}
 <h1>{{question}}</h1>
 <hr>
 <b>{{question.answer_set.count}} Answers</b>
 <hr>
+
+{% if question.answer_set.count == 0 %}
+hh
+{% endif %}
+
 {% for answer in question.answer_set.all %}
 
 {% if answer.is_anonymous %}
@@ -24,6 +34,37 @@
         src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
 </div>
 <hr>
+<div id="comments">
+    {% if user.pk %}
+    <div class="comment">
+        <H4 class="text-center">Post your comment</H4>
+        <div class="well">
+            {% render_comment_form for answer %}
+        </div>
+    </div>
+    {% else %}
+    <a href="{% url 'users:login' %}">Login to Participate</a>
+    {% endif %}
+    {% get_comment_count for answer as comment_count %}
+    {% if comment_count %}
+    <H5 class="text-center">
+        {% blocktrans count comment_count=comment_count %}
+        There is {{ comment_count }} comment below.
+        {% plural %}
+        There are {{ comment_count }} comments below.
+        {% endblocktrans %}
+    </H5>
+    <hr />
+    {% endif %}
+
+    {% if comment_count %}
+    <hr />
+    <ul class="media-list" id="comment-list">
+        {% render_xtdcomment_tree for answer %}
+    </ul>
+    {% endif %}
+</div>
 {% endfor %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="{% static 'js/vote.js' %}"></script>
+{% endblock %}

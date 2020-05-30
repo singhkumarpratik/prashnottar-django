@@ -1,11 +1,12 @@
 $(document).ready(function () {
     $(".score-form").each(function (index) {
+        var is_comment = $(this).attr("data-is-comment");
         var question_pk = $(this).attr("data-pk");
         var url = question_pk + "/vote";
         $.ajax({
             type: 'GET',
             url: url,
-            data: { "status": question_pk },
+            data: { "status": question_pk, is_comment: is_comment, },
             success: function (response) {
                 if (response["is_question_detail"]) {
                     if (response["has_upvoted"]) {
@@ -29,13 +30,14 @@ $(document).ready(function () {
 });
 $('input[name="up"]').click(function (e) {
     e.preventDefault();
+    var is_comment = $(this).attr("data-is-comment");
+    console.log(is_comment);
     var question_pk = $(this).attr("data-pk");
     var url = question_pk + "/vote";
-    console.log(url)
     $.ajax({
         type: 'GET',
         url: url,
-        data: { "up": 'Up' },
+        data: { "up": 'Up', is_comment: is_comment, },
         success: function (response) {
             if (response["valid"]) {
                 if (response["data"]["is_question_detail"]) {
@@ -73,13 +75,14 @@ $('input[name="up"]').click(function (e) {
 });
 $('input[name="down"]').click(function (e) {
     e.preventDefault();
+    var is_comment = $(this).attr("data-is-comment");
     var question_pk = $(this).attr("data-pk");
     var url = question_pk + "/vote";
     console.log(url)
     $.ajax({
         type: 'GET',
         url: url,
-        data: { "down": 'Down' },
+        data: { "down": 'Down', is_comment: is_comment, },
         success: function (response) {
             if (response["valid"]) {
                 if (response["data"]["is_question_detail"]) {

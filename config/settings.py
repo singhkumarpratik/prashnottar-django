@@ -35,13 +35,20 @@ INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
+    "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "users",
     "qnA",
+    "comments",
 ]
 
-THIRD_PARTY_APPS = ["vote", "django_summernote"]
+THIRD_PARTY_APPS = [
+    "vote",
+    "django_summernote",
+    "django_comments_xtd",
+    "django_comments",
+]
 INSTALLED_APPS += THIRD_PARTY_APPS
 
 MIDDLEWARE = [
@@ -122,3 +129,15 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
+
+SITE_ID = 1
+USE_I18N = True
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+COMMENTS_APP = "django_comments_xtd"
+COMMENTS_XTD_CONFIRM_EMAIL = False
+COMMENTS_XTD_SALT = b"es-war-einmal-una-bella-princesa-in-a-beautiful-castle"
+COMMENTS_XTD_FROM_EMAIL = "noreply@example.com"
+COMMENTS_XTD_CONTACT_EMAIL = "helpdesk@example.com"
+COMMENTS_XTD_MAX_THREAD_LEVEL = 4
+COMMENTS_XTD_MODEL = "comments.models.MyComment"
+COMMENTS_XTD_FORM_CLASS = "comments.forms.MyCommentForm"
