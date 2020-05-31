@@ -54,12 +54,12 @@
                 class="small mutedlink" href="{{ item.comment.get_reply_url }}">{% trans "Reply" %}</a>
             {% endif %}
             {% endif %}
-            <h4 id="score{{item.comment.id}}">{{item.comment.vote_score}}</h4>
+            <h4 id="score_comment{{item.comment.id}}">{{item.comment.vote_score}}</h4>
             <div class="score-form" data-pk="{{item.comment.id}}" data-is-comment="True">
-                <input type="image" value="Up" name="up" class="Up{{item.comment.id}} upvote" id="upvote"
+                <input type="image" value="Up" name="up" class="Up_comment{{item.comment.id}} upvote" id="upvote"
                     data-pk="{{item.comment.id}}" data-is-comment="True"
                     src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
-                <input type="image" value="Down" name="down" class="Down{{item.comment.id}} downvote"
+                <input type="image" value="Down" name="down" class="Down_comment{{item.comment.id}} downvote"
                     data-pk="{{item.comment.id}}" data-is-comment="True"
                     src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
             </div>

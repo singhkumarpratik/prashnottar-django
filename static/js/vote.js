@@ -9,11 +9,21 @@ $(document).ready(function () {
             data: { "status": question_pk, is_comment: is_comment, },
             success: function (response) {
                 if (response["is_question_detail"]) {
-                    if (response["has_upvoted"]) {
-                        $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square-fill.svg');
+                    if (is_comment) {
+                        if (response["has_upvoted"]) {
+                            $(".Up_comment" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square-fill.svg');
+                        }
+                        if (response["has_downvoted"]) {
+                            $(".Down_comment" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square-fill.svg');
+                        }
                     }
-                    if (response["has_downvoted"]) {
-                        $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square-fill.svg');
+                    else {
+                        if (response["has_upvoted"]) {
+                            $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square-fill.svg');
+                        }
+                        if (response["has_downvoted"]) {
+                            $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square-fill.svg');
+                        }
                     }
                 }
                 else {
@@ -41,14 +51,27 @@ $('input[name="up"]').click(function (e) {
         success: function (response) {
             if (response["valid"]) {
                 if (response["data"]["is_question_detail"]) {
-                    if (response["data"]["has_upvoted"]) {
-                        console.log("User upvoted");
-                        $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square-fill.svg');
-                        $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square.svg');
+                    if (is_comment) {
+                        if (response["data"]["has_upvoted"]) {
+                            console.log("User upvoted");
+                            $(".Up_comment" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square-fill.svg');
+                            $(".Down_comment" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square.svg');
+                        }
+                        else {
+                            console.log("User upvote removed");
+                            $(".Up_comment" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square.svg');
+                        }
                     }
                     else {
-                        console.log("User upvote removed");
-                        $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square.svg');
+                        if (response["data"]["has_upvoted"]) {
+                            console.log("User upvoted");
+                            $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square-fill.svg');
+                            $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square.svg');
+                        }
+                        else {
+                            console.log("User upvote removed");
+                            $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square.svg');
+                        }
                     }
                 }
                 else {
@@ -62,7 +85,12 @@ $('input[name="up"]').click(function (e) {
                         $(".Up" + question_pk).attr('src', 'static/imgs/qnA/caret-up-square.svg');
                     }
                 }
-                $('#score' + question_pk).html(response["data"]["score"]);
+                if (is_comment) {
+                    $('#score_comment' + question_pk).html(response["data"]["score"]);
+                }
+                else {
+                    $('#score' + question_pk).html(response["data"]["score"]);
+                }
             }
             else {
                 window.location.href = '/users/login/';
@@ -86,14 +114,27 @@ $('input[name="down"]').click(function (e) {
         success: function (response) {
             if (response["valid"]) {
                 if (response["data"]["is_question_detail"]) {
-                    if (response["data"]["has_downvoted"]) {
-                        console.log("User downvoted");
-                        $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square-fill.svg');
-                        $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square.svg');
+                    if (is_comment) {
+                        if (response["data"]["has_downvoted"]) {
+                            console.log("User downvoted");
+                            $(".Down_comment" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square-fill.svg');
+                            $(".Up_comment" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square.svg');
+                        }
+                        else {
+                            console.log("User downvote removed");
+                            $(".Down_comment" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square.svg');
+                        }
                     }
                     else {
-                        console.log("User downvote removed");
-                        $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square.svg');
+                        if (response["data"]["has_downvoted"]) {
+                            console.log("User downvoted");
+                            $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square-fill.svg');
+                            $(".Up" + question_pk).attr('src', '../../static/imgs/qnA/caret-up-square.svg');
+                        }
+                        else {
+                            console.log("User downvote removed");
+                            $(".Down" + question_pk).attr('src', '../../static/imgs/qnA/caret-down-square.svg');
+                        }
                     }
                 }
                 else {
@@ -107,7 +148,12 @@ $('input[name="down"]').click(function (e) {
                         $(".Down" + question_pk).attr('src', 'static/imgs/qnA/caret-down-square.svg');
                     }
                 }
-                $('#score' + question_pk).html(response["data"]["score"]);
+                if (is_comment) {
+                    $('#score_comment' + question_pk).html(response["data"]["score"]);
+                }
+                else {
+                    $('#score' + question_pk).html(response["data"]["score"]);
+                }
             }
             else {
                 window.location.href = '/users/login/';
