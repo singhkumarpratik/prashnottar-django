@@ -11,6 +11,7 @@ class CustomQuestionAdmin(admin.ModelAdmin):
         "created_date",
         "updated_date",
     )
+    filter_horizontal = ("topics",)
 
 
 @admin.register(models.Answer)

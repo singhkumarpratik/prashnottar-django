@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import JsonResponse
 from django.views.generic import ListView, DetailView, FormView
-from .models import Question, Answer
-from .forms import QuestionForm
 from comments.models import MyComment
+from .models import Question, Answer, Topic
+from .forms import QuestionForm
+from .get_topics import *
 
 
 class QnaListView(ListView):
@@ -105,5 +106,10 @@ class AskQuestionView(FormView):
         pk = self.kwargs.get("pk")
         question = form.save(commit=False)
         question.user = self.request.user
+        question_topics = get_topics(question.title)
         question.save()
+        for topic in question_topics:
+            if not Topic.objects.filter(topic=topic).exists():
+                Topic.objects.create(topic=topic)
+            question.topics.add(Topic.objects.get(topic=topic))
         return redirect(reverse("qnA:question_detail", kwargs={"slug": question.slug}))

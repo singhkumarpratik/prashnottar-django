@@ -1,4 +1,6 @@
+{% extends "base.html" %}
 {% load static %}
+{% block content %}
 {% for question in questions %}
 <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank">
     <h4>{{question}} - {{question.user.first_name}} on {{question.created_date}}</h4>
@@ -29,3 +31,4 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="{% static 'js/vote.js' %}"></script>
+{% endblock %}
