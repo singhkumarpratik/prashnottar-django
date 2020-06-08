@@ -10,7 +10,20 @@
 <hr>
 
 {% if question.answer_set.count == 0 %}
-hh
+<h4 class="text-center">No Answers</h4>
+{% else %}
+<div id="comments">
+    {% if user.pk %}
+    <div class="comment">
+        <h4 class="text-center">Post your comment</h4>
+        <div class="well">
+            {% render_comment_form for object %}
+        </div>
+    </div>
+    {% else %}
+    <a href="{% url 'users:login' %}">Login to Participate</a>
+    {% endif %}
+</div>
 {% endif %}
 
 {% for answer in question.answer_set.all %}
