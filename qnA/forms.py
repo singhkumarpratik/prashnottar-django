@@ -14,3 +14,15 @@ class QuestionForm(ModelForm):
         widgets = {
             "description": SummernoteWidget(),
         }
+
+
+class AnswerForm(ModelForm):
+    class Meta:
+        model = Answer
+        fields = [
+            "ans",
+            "is_anonymous",
+        ]
+        widgets = {
+            "ans": SummernoteWidget(),
+        }

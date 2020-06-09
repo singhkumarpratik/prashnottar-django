@@ -15,7 +15,6 @@
 <hr>
 <p>{{question.answer_set.all.0.ans}}</p>
 <h4>By
-
     {% if question.answer_set.all.0.is_anonymous %}
     <i>Anonymous</i>
     {% else %}
@@ -26,6 +25,7 @@
     (Edited at {{question.answer_set.all.0.updated_date}})
 </h4>
 {% endif %}
+<h4><a href="{% url 'qnA:answer' question.slug %}">Answer</a></h4>
 
 {% endfor %}
 

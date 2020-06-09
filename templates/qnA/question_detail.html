@@ -6,47 +6,35 @@
 {% block content %}
 <h1>{{question}}</h1>
 <hr>
-<b>{{question.answer_set.count}} Answers</b>
+<h4><a href="{% url 'qnA:answer' question.slug %}">Answer</a></h4> | <b>{{question.answer_set.count}} Answers</b>
 <hr>
 
 {% if question.answer_set.count == 0 %}
 <h4 class="text-center">No Answers</h4>
-{% else %}
-<div id="comments">
-    {% if user.pk %}
-    <div class="comment">
-        <h4 class="text-center">Post your comment</h4>
-        <div class="well">
-            {% render_comment_form for object %}
-        </div>
-    </div>
-    {% else %}
-    <a href="{% url 'users:login' %}">Login to Participate</a>
-    {% endif %}
-</div>
 {% endif %}
 
 {% for answer in question.answer_set.all %}
-
-{% if answer.is_anonymous %}
-<i>Anonymous</i>
-{% else %}
-<p>{{answer.user.first_name}} {{answer.user.last_name}}
-    {% endif %}
-    on {{answer.created_date}}
-    {% if answer.created_date != answer.updated_date %}
-    (Edited at {{answer.updated_date}})
-    {% endif %}
-</p>
-{{answer.ans}}
-<h4 id="score{{answer.pk}}">{{answer.vote_score}}</h4>
-<div class="score-form" data-pk="{{answer.pk}}">
-    <input type="image" value="Up" name="up" class="Up{{answer.pk}} upvote" id="upvote" data-pk="{{answer.pk}}"
-        src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
-    <input type="image" value="Down" name="down" class="Down{{answer.pk}} downvote" data-pk="{{answer.pk}}"
-        src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
+<div class="answer">
+    {% if answer.is_anonymous %}
+    <i>Anonymous</i>
+    {% else %}
+    <p>{{answer.user.first_name}} {{answer.user.last_name}}
+        {% endif %}
+        on {{answer.created_date}}
+        {% if answer.created_date != answer.updated_date %}
+        (Edited at {{answer.updated_date}})
+        {% endif %}
+    </p>
+    {{answer.ans | safe}}
+    <h4 id="score{{answer.pk}}">{{answer.vote_score}}</h4>
+    <div class="score-form" data-pk="{{answer.pk}}">
+        <input type="image" value="Up" name="up" class="Up{{answer.pk}} upvote" id="upvote" data-pk="{{answer.pk}}"
+            src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
+        <input type="image" value="Down" name="down" class="Down{{answer.pk}} downvote" data-pk="{{answer.pk}}"
+            src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
+    </div>
+    <hr>
 </div>
-<hr>
 <div id="comments">
     {% if user.pk %}
     <div class="comment">
