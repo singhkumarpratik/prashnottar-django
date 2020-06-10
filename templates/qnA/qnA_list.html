@@ -29,23 +29,25 @@
             </h4>
             {% endif %}
             <h4><a href="{% url 'qnA:answer' question.slug %}">Answer</a></h4>
-
-            {% endfor %}
-            {% if page_obj.has_next %}
-            <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
-            {% endif %}
-            <div class="d-flex justify-content-center" style="display:none;">
-                <div class="spinner-border" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% if page_obj.has_next %}
+    <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+    {% endif %}
+    <div class="d-flex justify-content-center" style="display:none;">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
         </div>
     </div>
 </div>
-<script src="{% static 'js/jquery.min.js' %}"></script>
+
+{% block scripts %}
+
 <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
 <script src="{% static 'js/infinite.min.js' %}"></script>
 <script src="{% static 'js/vote.js' %}"></script>
+
 <script>
     var infinite = new Waypoint.Infinite({
         element: $('.infinite-container')[0],
@@ -61,4 +63,5 @@
     });
 
 </script>
+{% endblock scripts %}
 {% endblock %}
