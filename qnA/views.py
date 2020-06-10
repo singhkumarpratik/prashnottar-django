@@ -5,6 +5,9 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.views.generic import ListView, DetailView, FormView
 from django.utils import timezone
+from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
 from comments.models import MyComment
 from .models import Question, Answer, Topic
 from .forms import *
@@ -14,9 +17,10 @@ from .get_topics import *
 class QnaListView(ListView):
     model = Question
     template_name = "qnA/qnA_list.html"
+    paginate_by = 10
+    context_object_name = "questions"
 
-    def get_context_data(self, **kwargs):
-        context = super(QnaListView, self).get_context_data(**kwargs)
+    def get_queryset(self):
         questions = Question.objects.all()
         for question in questions:
             order = math.log(max(abs(question.vote_score), 1), 10)
@@ -30,8 +34,15 @@ class QnaListView(ListView):
             question.rank = round(sign * order + seconds / 10800, 7)
             print(seconds, question.rank, question.title)
         sorted_submissions = sorted(questions, key=lambda x: x.rank, reverse=True)
-        context["questions"] = sorted_submissions
-        return context
+        paginator = Paginator(sorted_submissions, self.paginate_by)
+        page = self.request.GET.get("page")
+        try:
+            pagin = paginator.page(page)
+        except PageNotAnInteger:
+            pagin = paginator.page(1)
+        except EmptyPage:
+            pagin = paginator.page(paginator.num_pages)
+        return sorted_submissions
 
 
 class QuestionDetailView(DetailView):
