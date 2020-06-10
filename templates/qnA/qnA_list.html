@@ -1,51 +1,64 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-{% for question in questions %}
-<a href="{% url 'qnA:question_detail' question.slug %}" target="_blank">
-    <h4>{{question}} - {{question.user.first_name}} on {{question.created_date}}</h4>
-</a>
-<h4 id="score{{question.pk}}">{{question.vote_score}}</h4>
-<div class="score-form" data-pk="{{question.pk}}">
-    <input type="image" value="Up" name="up" class="Up{{question.pk}} upvote" id="upvote" data-pk="{{question.pk}}"
-        src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
-    <input type="image" value="Down" name="down" class="Down{{question.pk}} downvote" data-pk="{{question.pk}}"
-        src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
+<div class="container">
+    <div class="infinite-container">
+        {% for question in questions %}
+        <div class="infinite-item">
+            <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank">
+                <h4>{{question}} - {{question.user.first_name}} on {{question.created_date}}</h4>
+            </a>
+            <h4 id="score{{question.pk}}">{{question.vote_score}}</h4>
+            <div class="score-form" data-pk="{{question.pk}}">
+                <input type="image" value="Up" name="up" class="Up{{question.pk}} upvote" id="upvote"
+                    data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
+                <input type="image" value="Down" name="down" class="Down{{question.pk}} downvote"
+                    data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
+            </div>
+            <hr>
+            <p>{{question.answer_set.all.0.ans | safe   }}</p>
+            <h4>By
+                {% if question.answer_set.all.0.is_anonymous %}
+                <i>Anonymous</i>
+                {% else %}
+                {{question.answer_set.all.0.user.first_name}} {{question.answer_set.all.0.user.last_name}}
+                {% endif %}
+                on {{question.answer_set.all.0.created_date}}
+                {% if question.answer_set.all.0.created_date != question.answer_set.all.0.updated_date %}
+                (Edited at {{question.answer_set.all.0.updated_date}})
+            </h4>
+            {% endif %}
+            <h4><a href="{% url 'qnA:answer' question.slug %}">Answer</a></h4>
+
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <a class="infinite-more-link" href="?page={{ page_obj.next_page_number }}"></a>
+            {% endif %}
+            <div class="d-flex justify-content-center" style="display:none;">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<hr>
-<p>{{question.answer_set.all.0.ans}}</p>
-<h4>By
-    {% if question.answer_set.all.0.is_anonymous %}
-    <i>Anonymous</i>
-    {% else %}
-    {{question.answer_set.all.0.user.first_name}} {{question.answer_set.all.0.user.last_name}}
-    {% endif %}
-    on {{question.answer_set.all.0.created_date}}
-    {% if question.answer_set.all.0.created_date != question.answer_set.all.0.updated_date %}
-    (Edited at {{question.answer_set.all.0.updated_date}})
-</h4>
-{% endif %}
-<h4><a href="{% url 'qnA:answer' question.slug %}">Answer</a></h4>
-
-{% endfor %}
-{% if is_paginated %}
-<ul class="pagination">
-    {% if page_obj.has_previous %}
-    <li>
-        <span><a href="?page={{ page_obj.previous_page_number }}">Previous</a></span>
-    </li>
-    {% endif %}
-    <li class="">
-        <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
-    </li>
-    {% if page_obj.has_next %}
-    <li>
-        <span><a href="?page={{ page_obj.next_page_number }}">Next</a></span>
-    </li>
-    {% endif %}
-</ul>
-{% endif %}
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<script src="{% static 'js/infinite.min.js' %}"></script>
 <script src="{% static 'js/vote.js' %}"></script>
+<script>
+    var infinite = new Waypoint.Infinite({
+        element: $('.infinite-container')[0],
+        handler: function (direction) {
+        },
+        offset: 'bottom-in-view',
+        onBeforePageLoad: function () {
+            $('.spinner-border').show();
+        },
+        onAfterPageLoad: function () {
+            $('.spinner-border').hide();
+        }
+    });
+
+</script>
 {% endblock %}
