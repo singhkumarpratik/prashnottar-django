@@ -22,6 +22,9 @@
 
 <body>
   <div class="container">
+    <a href="{% url 'users:logout' %}">logout</a>
+    <a href="{% url 'users:login' %}">login</a>
+    <a href="{% url 'qnA:ask-question' %}">Ask</a>
     {% block content %}
     {% endblock %}
   </div>

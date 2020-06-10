@@ -23,6 +23,7 @@ class Question(VoteModel, models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     topics = models.ManyToManyField(Topic, blank=True)
+    rank = models.FloatField(default=0)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title)
@@ -30,6 +31,9 @@ class Question(VoteModel, models.Model):
 
     def __str__(self):
         return self.title
+
+    # class Meta:
+    #     ordering = ["-vote_score"]
 
 
 class Answer(VoteModel, models.Model):
