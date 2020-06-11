@@ -4,68 +4,129 @@
 {% load comments %}
 {% load comments_xtd %}
 {% block content %}
-<h1>{{question}}</h1>
-<hr>
-<h4><a href="{% url 'qnA:answer' question.slug %}">Answer</a></h4> | <b>{{question.answer_set.count}} Answers</b>
-<hr>
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card" style="background-color: #F1F2F2;">
+                {% if user.is_authenticated %}
+                <div class="card-body text-center">
+                    <img class="rounded-circle text-center" width="55" src="https://picsum.photos/50/50" alt="">
+                    <div class="h5 mt-2 mb-0">{{user.first_name}} {{user.last_name}}</div>
+                    <div class="h7 text-muted">{{user.bio}}</div>
+                    <a class="btn btn-outline-danger mt-2" href="#" role="button">Edit Profile</a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="text-center mt-4">
+                <div class="h7 text-muted">
+                    Made With ❤ By <a href="https://github.com/singhkumarpratik">Pratik</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="question">
+                <h3 class="crim">{{question}}</h3>
+                <h6><a href="{% url 'qnA:answer' question.slug %}" class="card-link"><img
+                            src="{% static 'imgs/qnA/pencil-square.svg' %}" alt="Answer">
+                        Answer</a> |
+                    <b>{{question.answer_set.count}} Answers</b>
+                </h6>
+            </div>
+            <hr>
+            {% if question.answer_set.count == 0 %}
+            <h4 class="text-center">No Answers</h4>
+            {% else %}
+            {% for answer in question.answer_set.all %}
+            <div class="card gedf-card mb-4">
+                <div class="card-body">
+                    <div class="ans">
+                        {{answer.ans | safe}}
+                    </div>
+                </div>
+                {% if question.answer_set.all.0.ans %}
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="mr-2">
+                                <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                            </div>
+                            <div class="ml-2">
+                                <div class="p m-0">
+                                    <b>
+                                        {% if answer.is_anonymous %}
+                                        <i>Anonymous</i>
+                                        {% else %}
+                                        {{answer.user.first_name}} {{answer.user.last_name}}
+                                        {% endif %}
+                                    </b> |
+                                    {{question.created_date |date:'d F, Y'}}
+                                    {% if answer.created_date != answer.updated_date %}
+                                    (Edited)
+                                    {% endif %}
+                                </div>
+                                <div class="h7 text-muted">{{answer.user.bio}}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 id="score{{question.pk}}">{{question.vote_score}}</h4>
+                            <div class="score-form" data-pk="{{question.pk}}"
+                                data-page="{% if page_obj.number %}{{page_obj.number }}{% endif %}">
+                                <input type="image" value="Up" name="up" class="Up{{question.pk}} upvote" id="upvote"
+                                    data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
+                                <input type="image" value="Down" name="down" class="Down{{question.pk}} downvote"
+                                    data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div id="comments">
+                        {% if user.pk %}
+                        <div class="comment">
+                            <H4 class="text-center">Post your comment</H4>
+                            <div class="well">
+                                {% render_comment_form for answer %}
+                            </div>
+                        </div>
+                        {% else %}
+                        <a href="{% url 'users:login' %}">Login to Participate</a>
+                        {% endif %}
+                        {% get_comment_count for answer as comment_count %}
+                        {% if comment_count %}
+                        <H5 class="text-center">
+                            {% blocktrans count comment_count=comment_count %}
+                            There is {{ comment_count }} comment below.
+                            {% plural %}
+                            There are {{ comment_count }} comments below.
+                            {% endblocktrans %}
+                        </H5>
+                        {% endif %}
 
-{% if question.answer_set.count == 0 %}
-<h4 class="text-center">No Answers</h4>
-{% endif %}
-
-{% for answer in question.answer_set.all %}
-<div class="answer">
-    {% if answer.is_anonymous %}
-    <i>Anonymous</i>
-    {% else %}
-    <p>{{answer.user.first_name}} {{answer.user.last_name}}
-        {% endif %}
-        on {{answer.created_date}}
-        {% if answer.created_date != answer.updated_date %}
-        (Edited at {{answer.updated_date}})
-        {% endif %}
-    </p>
-    {{answer.ans | safe}}
-    <h4 id="score{{answer.pk}}">{{answer.vote_score}}</h4>
-    <div class="score-form" data-pk="{{answer.pk}}">
-        <input type="image" value="Up" name="up" class="Up{{answer.pk}} upvote" id="upvote" data-pk="{{answer.pk}}"
-            src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
-        <input type="image" value="Down" name="down" class="Down{{answer.pk}} downvote" data-pk="{{answer.pk}}"
-            src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
-    </div>
-    <hr>
-</div>
-<div id="comments">
-    {% if user.pk %}
-    <div class="comment">
-        <H4 class="text-center">Post your comment</H4>
-        <div class="well">
-            {% render_comment_form for answer %}
+                        {% if comment_count %}
+                        <hr />
+                        <ul class="media-list" id="comment-list">
+                            {% render_xtdcomment_tree for answer %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="ml-2">
+                                <h4><a href="{% url 'qnA:answer' question.slug %}">Answer Now</a></h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% endif %}
         </div>
     </div>
-    {% else %}
-    <a href="{% url 'users:login' %}">Login to Participate</a>
-    {% endif %}
-    {% get_comment_count for answer as comment_count %}
-    {% if comment_count %}
-    <H5 class="text-center">
-        {% blocktrans count comment_count=comment_count %}
-        There is {{ comment_count }} comment below.
-        {% plural %}
-        There are {{ comment_count }} comments below.
-        {% endblocktrans %}
-    </H5>
-    <hr />
-    {% endif %}
-
-    {% if comment_count %}
-    <hr />
-    <ul class="media-list" id="comment-list">
-        {% render_xtdcomment_tree for answer %}
-    </ul>
-    {% endif %}
 </div>
-{% endfor %}
+<hr>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="{% static 'js/vote.js' %}"></script>
 {% endblock %}
