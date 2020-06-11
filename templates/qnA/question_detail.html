@@ -7,17 +7,20 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
-            <div class="card" style="background-color: #F1F2F2;">
-                {% if user.is_authenticated %}
-                <div class="card-body text-center">
-                    <img class="rounded-circle text-center" width="55" src="https://picsum.photos/50/50" alt="">
-                    <div class="h5 mt-2 mb-0">{{user.first_name}} {{user.last_name}}</div>
-                    <div class="h7 text-muted">{{user.bio}}</div>
-                    <a class="btn btn-outline-danger mt-2" href="#" role="button">Edit Profile</a>
+            <div class="related-questions">
+                <h6>Related Questions</h6>
+                <hr>
+                {% for question in related_questions %}
+                <div class="question mb-3">
+                    <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank" class="card-link">
+                        <h6>{{question}}</h6>
+                    </a>
                 </div>
-                {% endif %}
+                {% endfor %}
+
             </div>
-            <div class="text-center mt-4">
+            <hr>
+            <div class="text-center">
                 <div class="h7 text-muted">
                     Made With ❤ By <a href="https://github.com/singhkumarpratik">Pratik</a>
                 </div>

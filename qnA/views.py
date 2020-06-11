@@ -42,11 +42,31 @@ class QnaListView(ListView):
             pagin = paginator.page(1)
         except EmptyPage:
             pagin = paginator.page(paginator.num_pages)
+        print(sorted_submissions)
         return sorted_submissions
 
 
 class QuestionDetailView(DetailView):
     queryset = Question.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(QuestionDetailView, self).get_context_data(**kwargs)
+        topics = self.get_object().topics.all()
+        related_questions = []
+        max_matches = False
+        for topic in topics:
+            matches = Question.objects.filter(title__icontains=topic)
+            for match in matches:
+                if len(related_questions) != 8:
+                    related_questions.append(match)
+                else:
+                    max_matches = True
+                    break
+            if max_matches:
+                break
+        print(related_questions)
+        context["related_questions"] = related_questions
+        return context
 
 
 class AskQuestionView(FormView):
