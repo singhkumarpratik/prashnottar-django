@@ -41,7 +41,7 @@ class Answer(VoteModel, models.Model):
         ordering = ["-vote_score"]
 
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    ans = models.TextField(max_length=4000)
+    ans = models.TextField()
     user = models.ForeignKey(userModels.User, on_delete=models.CASCADE)
     is_anonymous = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)

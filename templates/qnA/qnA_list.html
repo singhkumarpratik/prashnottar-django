@@ -6,24 +6,19 @@
     <div class="row">
         <div class="col-md-3">
             <div class="card" style="background-color: #F1F2F2;">
-                <div class="card-body">
-                    <div class="h5">@LeeCross</div>
-                    <div class="h7 text-muted">Fullname : Miracles Lee Cross</div>
-                    <div class="h7">Developer of web applications, JavaScript, PHP, Java, Python, Ruby, Java, Node.js,
-                        etc.
-                    </div>
+                {% if user.is_authenticated %}
+                <div class="card-body text-center">
+                    <img class="rounded-circle text-center" width="55" src="https://picsum.photos/50/50" alt="">
+                    <div class="h5 mt-2 mb-0">{{user.first_name}} {{user.last_name}}</div>
+                    <div class="h7 text-muted">{{user.bio}}</div>
+                    <a class="btn btn-outline-danger mt-2" href="#" role="button">Edit Profile</a>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <div class="h6 text-muted">Followers</div>
-                        <div class="h5">5.2342</div>
-                    </li>
-                    <li class="list-group-item">
-                        <div class="h6 text-muted">Following</div>
-                        <div class="h5">6758</div>
-                    </li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                </ul>
+                {% endif %}
+            </div>
+            <div class="text-center mt-4">
+                <div class="h7 text-muted">
+                    Made With ❤ By <a href="https://github.com/singhkumarpratik">Pratik</a>
+                </div>
             </div>
         </div>
         <div class="col-md-6">
@@ -64,16 +59,17 @@
                         </div>
                         <div class="card-body">
                             <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank" class="card-link">
-                                <h5 class="card-title">{{question}}</h5>
+                                <b>
+                                    <h4 class="card-title crim">{{question}}</h4>
+                                </b>
                             </a>
-                            <p class="card-text">
+                            <div class="ans">
                                 {% if question.answer_set.all.0.ans %}
                                 {{question.answer_set.all.0.ans | safe}}
                                 {% else %}
                                 No Answer
                                 {% endif %}
-
-                            </p>
+                            </div>
                         </div>
                         {% if question.answer_set.all.0.ans %}
                         <div class="card-footer">

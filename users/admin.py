@@ -14,3 +14,4 @@ class CustomUserAdmin(UserAdmin):
         "is_staff",
         "is_superuser",
     )
+    fieldsets = UserAdmin.fieldsets + (("Bio", {"fields": ("bio",),}),)
