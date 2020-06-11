@@ -55,7 +55,9 @@ class QuestionDetailView(DetailView):
         related_questions = []
         max_matches = False
         for topic in topics:
-            matches = Question.objects.filter(title__icontains=topic)
+            matches = Question.objects.filter(title__icontains=topic).exclude(
+                pk=self.get_object().pk
+            )
             for match in matches:
                 if len(related_questions) != 8:
                     related_questions.append(match)

@@ -40,7 +40,7 @@
                                             </b> |
                                             {{question.created_date |date:'d F, Y'}}
                                         </div>
-                                        <div class="h7 text-muted">TODO: Bio</div>
+                                        <div class="h7 text-muted">{{question.user.bio}}</div>
                                     </div>
                                 </div>
                                 <div>
@@ -93,7 +93,7 @@
                                             {% endif %}
                                             {% endif %}
                                         </div>
-                                        <div class="h7 text-muted">TODO: Bio</div>
+                                        <div class="h7 text-muted">{{question.answer_set.all.0.user.bio}}</div>
                                     </div>
                                 </div>
                             </div>
