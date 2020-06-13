@@ -1,5 +1,27 @@
-<form action="" method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button>Submit</button>
-</form>
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% block buttons %}
+{% endblock buttons %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 mt-5">
+            <div class="card gedf-card">
+                <div class="card-body text-center">
+                    <img class="mb-4" src="{% static 'imgs/logo.png' %}" height="40">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <button class="btn btn-lg btn-danger btn-block">Sign in</button>
+                    </form>
+                    <p class="mt-2 mb-3">Don't have an account? <a href="{% url 'users:register' %}">Register</a>
+                    </p>
+                    <p class="text-muted">Made With ❤ By <a href="https: //github.com/singhkumarpratik">
+                            Pratik</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -4,8 +4,19 @@ from .models import User
 
 
 class LoginForm(forms.Form):
-    email = forms.EmailField(label="Enter email")
-    password = forms.CharField(label="Enter password", widget=forms.PasswordInput)
+    email = forms.EmailField(
+        label="Enter Email",
+        required=True,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Enter Email"}
+        ),
+    )
+    password = forms.CharField(
+        label="Enter password",
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "Enter Password"}
+        ),
+    )
 
     def clean(self):
         email = self.cleaned_data.get("email")
@@ -27,11 +38,39 @@ class LoginForm(forms.Form):
 
 
 class RegisterForm(forms.Form):
-    first_name = forms.CharField(max_length=30)
-    last_name = forms.CharField(max_length=30)
-    email = forms.EmailField(label="Enter email")
-    password = forms.CharField(label="Enter password", widget=forms.PasswordInput)
-    password1 = forms.CharField(label="Confirm password", widget=forms.PasswordInput)
+    first_name = forms.CharField(
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Enter First Name"}
+        ),
+    )
+    last_name = forms.CharField(
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Enter Last Name"}
+        ),
+    )
+    email = forms.EmailField(
+        label="Enter email",
+        required=True,
+        widget=forms.TextInput(
+            attrs={"class": "form-control", "placeholder": "Enter Email"}
+        ),
+    )
+    password = forms.CharField(
+        label="Enter password",
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "Enter Password"}
+        ),
+    )
+    password1 = forms.CharField(
+        label="Confirm password",
+        widget=forms.PasswordInput(
+            attrs={"class": "form-control", "placeholder": "Confirm Password"}
+        ),
+    )
 
     def clean_email(self):
         email = self.cleaned_data.get("email")

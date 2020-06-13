@@ -43,7 +43,7 @@
             </form>
           </li>
         </ul>
-
+        {% block buttons %}
         {% if user.is_authenticated %}
         <a class="btn btn-danger mr-4" href="{% url 'qnA:ask-question' %}" role="button">Ask Question</a>
         <a class="btn btn-danger" href="{% url 'users:logout' %}" role="button">Logout</a>
@@ -51,6 +51,7 @@
         <a class="btn btn-danger mr-4" href="{% url 'users:login' %}" role="button">Login</a>
         <a class="btn btn-danger" href="{% url 'users:register' %}" role="button">Register</a>
         {% endif %}
+        {% endblock buttons %}
 
       </div>
     </div>
