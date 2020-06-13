@@ -100,3 +100,25 @@ class RegisterForm(forms.Form):
         createdUser.first_name = first_name
         createdUser.last_name = last_name
         createdUser.save()
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = (
+            "first_name",
+            "last_name",
+            "bio",
+            "display_img",
+        )
+        widgets = {
+            "first_name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter First Name"}
+            ),
+            "last_name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter Last Name"}
+            ),
+            "bio": forms.Textarea(
+                attrs={"class": "form-control", "placeholder": "Enter Bio", "rows": 3,}
+            ),
+        }

@@ -1,8 +1,9 @@
 from django.urls import reverse_lazy
 from django.shortcuts import redirect
-from django.views.generic import FormView
+from django.views.generic import FormView, UpdateView
 from django.contrib.auth import authenticate, login, logout
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, ProfileForm
+from .models import User
 
 
 class UserLoginView(FormView):
@@ -33,6 +34,16 @@ class UserRegisterView(FormView):
         if user is not None:
             login(self.request, user)
         return super().form_valid(form)
+
+
+class ProfileUpdateView(UpdateView):
+    template_name = "users/edit.html"
+    model = User
+    form_class = ProfileForm
+    success_url = reverse_lazy("qnA:home")
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 def logout_request(request):

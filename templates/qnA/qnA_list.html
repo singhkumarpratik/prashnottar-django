@@ -8,10 +8,10 @@
             <div class="card" style="background-color: #F1F2F2;">
                 {% if user.is_authenticated %}
                 <div class="card-body text-center">
-                    <img class="rounded-circle text-center" width="55" src="https://picsum.photos/50/50" alt="">
+                    <img class="rounded-circle text-center" height="100" width="100" src="{% if request.user.display_img %}{{request.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
                     <div class="h5 mt-2 mb-0">{{user.first_name}} {{user.last_name}}</div>
                     <div class="h7 text-muted">{{user.bio}}</div>
-                    <a class="btn btn-outline-danger mt-2" href="#" role="button">Edit Profile</a>
+                    <a class="btn btn-outline-danger mt-2" href="{% url 'users:edit' %}" role="button">Edit Profile</a>
                 </div>
                 {% endif %}
             </div>
@@ -30,7 +30,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="mr-2">
-                                        <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                                        <img class="rounded-circle" width="45" height="45" src="{% if question.user.display_img %}{{question.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
                                     </div>
                                     <div class="ml-2">
                                         <div class="p m-0">
@@ -79,7 +79,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="mr-2">
-                                        <img class="rounded-circle" width="45" src="https://picsum.photos/50/50" alt="">
+                                        <img class="rounded-circle" width="45" height="45" src="{% if question.answer_set.all.0.user.display_img %}{{question.answer_set.all.0.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
                                     </div>
                                     <div class="ml-2">
                                         <div class="p m-0">
