@@ -21,7 +21,11 @@ class QnaListView(ListView):
     context_object_name = "questions"
 
     def get_queryset(self):
-        questions = Question.objects.all()
+        try:
+            question = self.request.GET.get("question")
+            questions = Question.objects.filter(title__icontains=question)
+        except:
+            questions = Question.objects.all()
         for question in questions:
             order = math.log(max(abs(question.vote_score), 1), 10)
             if question.vote_score > 0:
@@ -32,7 +36,6 @@ class QnaListView(ListView):
                 sign = 0
             seconds = (question.created_date).timestamp() - 1134028003
             question.rank = round(sign * order + seconds / 10800, 7)
-            print(seconds, question.rank, question.title)
         sorted_submissions = sorted(questions, key=lambda x: x.rank, reverse=True)
         paginator = Paginator(sorted_submissions, self.paginate_by)
         page = self.request.GET.get("page")
@@ -42,7 +45,6 @@ class QnaListView(ListView):
             pagin = paginator.page(1)
         except EmptyPage:
             pagin = paginator.page(paginator.num_pages)
-        print(sorted_submissions)
         return sorted_submissions
 
 
@@ -66,7 +68,6 @@ class QuestionDetailView(DetailView):
                     break
             if max_matches:
                 break
-        print(related_questions)
         context["related_questions"] = related_questions
         return context
 
@@ -110,7 +111,6 @@ def vote(request, question_id, slug=None):
                 is_question_detail = True
                 if request.GET.get("is_comment") == "True":
                     question = MyComment.objects.get(pk=question_id)
-                    print(question)
                 else:
                     question = Answer.objects.get(pk=question_id)
             else:
@@ -141,7 +141,6 @@ def vote(request, question_id, slug=None):
             if slug is not None:
                 if request.GET.get("is_comment") == "True":
                     question = MyComment.objects.get(pk=question_id)
-                    print(question)
                 else:
                     question = Answer.objects.get(pk=question_id)
             else:
