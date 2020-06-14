@@ -29,7 +29,7 @@
         <div class="col-md-6">
             <div class="question">
                 <h3 class="crim">{{question}}</h3>
-                <h6><a href="{% url 'qnA:answer' question.slug %}" class="card-link"><img
+                <h6><a href="{% url 'qnA:answer' question.slug %}" class="badge badge-danger"><img
                             src="{% static 'imgs/qnA/pencil-square.svg' %}" alt="Answer">
                         Answer</a> |
                     <b>{{question.answer_set.count}} Answers</b>

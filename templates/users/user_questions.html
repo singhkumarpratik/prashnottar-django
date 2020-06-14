@@ -1,0 +1,80 @@
+{% extends "users/user_detail.html" %}
+{% load static %}
+{% block profile %}
+<div class="container">
+    {% for question in questions %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="mr-2">
+                        <img class="rounded-circle" width="45" height="45"
+                            src="{% if question.user.display_img %}{{question.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                    </div>
+                    <div class="ml-2">
+                        <div class="p m-0">
+                            <b>
+                                {{question.user.first_name}}
+                                {{question.user.last_name}}
+                            </b> |
+                            {{question.created_date |date:'d F, Y'}}
+                        </div>
+                        <div class="h7 text-muted">{{question.user.bio}}</div>
+                    </div>
+                </div>
+                <div>
+                    <h4 id="score{{question.pk}}">{{question.vote_score}}</h4>
+                    <div class="score-form" data-pk="{{question.pk}}"
+                        data-page="{% if page_obj.number %}{{page_obj.number }}{% endif %}">
+                        <input type="image" value="Up" name="up" class="Up{{question.pk}} upvote" id="upvote"
+                            data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
+                        <input type="image" value="Down" name="down" class="Down{{question.pk}} downvote"
+                            data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank" class="card-link">
+                <b>
+                    <h4 class="card-title crim">{{question}}</h4>
+                </b>
+            </a>
+            <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank"
+                style="text-decoration: none; color:black;">
+                <div class="ans">
+                    {{question.answer_set.all.0.ans | safe | truncatewords_html:60}}
+                </div>
+            </a>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="mr-2">
+                        <img class="rounded-circle" width="45" height="45"
+                            src="{% if question.answer_set.all.0.user.display_img %}{{question.answer_set.all.0.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                    </div>
+                    <div class="ml-2">
+                        <div class="p m-0">
+                            {% if question.answer_set.all.0.is_anonymous %}
+                            <i>Anonymous</i>
+                            {% else %}
+                            <b>
+                                {{question.answer_set.all.0.user.first_name}}
+                                {{question.answer_set.all.0.user.last_name}}
+                            </b> |
+                            {{question.answer_set.all.0.created_date|date:'d F, Y'}}
+                            {% if question.answer_set.all.0.created_date != question.answer_set.all.0.updated_date %}
+                            (Edited)
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="h7 text-muted">{{question.answer_set.all.0.user.bio}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock profile %}

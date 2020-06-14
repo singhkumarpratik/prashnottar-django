@@ -95,7 +95,6 @@ class RegisterForm(forms.Form):
         last_name = self.cleaned_data.get("last_name")
         email = self.cleaned_data.get("email")
         password = self.cleaned_data.get("password")
-
         createdUser = User.objects.create_user(email, email, password)
         createdUser.first_name = first_name
         createdUser.last_name = last_name

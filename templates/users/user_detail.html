@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="d-flex flex-row justify-content-center">
+                <div>
+                    <img class="rounded-circle text-center mr-4" height="100" width="100"
+                        src="{% if user.display_img %}{{user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                </div>
+                <div class="align-self-center">
+                    <h1 class="crim">{{user.first_name}} {{user.last_name}}</h1>
+                    <h6 class="text-muted">{{user.bio}}</h6>
+                </div>
+                <hr>
+            </div>
+            <hr>
+            <div class="links">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link btn-outline-danger" href="{% url 'users:profile' user.slug %}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-outline-danger"
+                            href="{% url 'users:profile_questions' user.slug %}">Questions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-outline-danger"
+                            href="{% url 'users:profile_answers' user.slug %}">Answers</a>
+                    </li>
+                </ul>
+            </div>
+            <hr>
+            {% block profile %}
+            {% endblock profile %}
+        </div>
+        <div class="col-md-3 sticky-top">
+            hi
+        </div>
+    </div>
+</div>
+{% endblock content %}
