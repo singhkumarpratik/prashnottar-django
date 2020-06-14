@@ -8,8 +8,10 @@
             <div class="card" style="background-color: #F1F2F2;">
                 {% if user.is_authenticated %}
                 <div class="card-body text-center">
-                    <img class="rounded-circle text-center" height="100" width="100" src="{% if request.user.display_img %}{{request.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
-                    <div class="h5 mt-2 mb-0">{{user.first_name}} {{user.last_name}}</div>
+                    <img class="rounded-circle text-center" height="100" width="100"
+                        src="{% if request.user.display_img %}{{request.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                    <div class="h5 mt-2 mb-0"><a href="{% url 'users:profile' user.slug %}">{{user.first_name}}
+                            {{user.last_name}}</a></div>
                     <div class="h7 text-muted">{{user.bio}}</div>
                     <a class="btn btn-outline-danger mt-2" href="{% url 'users:edit' %}" role="button">Edit Profile</a>
                 </div>
@@ -30,13 +32,16 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="mr-2">
-                                        <img class="rounded-circle" width="45" height="45" src="{% if question.user.display_img %}{{question.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                                        <img class="rounded-circle" width="45" height="45"
+                                            src="{% if question.user.display_img %}{{question.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
                                     </div>
                                     <div class="ml-2">
                                         <div class="p m-0">
                                             <b>
-                                                {{question.user.first_name}}
-                                                {{question.user.last_name}}
+                                                <a href="{% url 'users:profile' question.user.slug %}">
+                                                    {{question.user.first_name}}
+                                                    {{question.user.last_name}}
+                                                </a>
                                             </b> |
                                             {{question.created_date |date:'d F, Y'}}
                                         </div>
@@ -79,7 +84,8 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="mr-2">
-                                        <img class="rounded-circle" width="45" height="45" src="{% if question.answer_set.all.0.user.display_img %}{{question.answer_set.all.0.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                                        <img class="rounded-circle" width="45" height="45"
+                                            src="{% if question.answer_set.all.0.user.display_img %}{{question.answer_set.all.0.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
                                     </div>
                                     <div class="ml-2">
                                         <div class="p m-0">
@@ -87,8 +93,10 @@
                                             <i>Anonymous</i>
                                             {% else %}
                                             <b>
-                                                {{question.answer_set.all.0.user.first_name}}
-                                                {{question.answer_set.all.0.user.last_name}}
+                                                <a href="{% url 'users:profile' question.answer_set.all.0.user.slug %}">
+                                                    {{question.answer_set.all.0.user.first_name}}
+                                                    {{question.answer_set.all.0.user.last_name}}
+                                                </a>
                                             </b> |
                                             {{question.answer_set.all.0.created_date|date:'d F, Y'}}
                                             {% if question.answer_set.all.0.created_date != question.answer_set.all.0.updated_date %}
