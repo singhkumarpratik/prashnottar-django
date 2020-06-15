@@ -46,6 +46,7 @@ class Answer(VoteModel, models.Model):
     is_anonymous = models.BooleanField(default=False)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+    pin_answer = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse("qnA:question_detail", kwargs={"slug": self.question.slug,},)

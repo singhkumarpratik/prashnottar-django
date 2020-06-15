@@ -33,6 +33,91 @@
             </div>
             <hr>
             {% block profile %}
+            {% if answers %}
+            <h4 class="crim text-center mb-4">{{user.first_name}} {{user.last_name}}'s Pinned Answers</h4>
+            <div class="user-profile">
+                {% for answer in answers %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="mr-2">
+                                    <img class="rounded-circle" width="45" height="45"
+                                        src="{% if answer.question.user.display_img %}{{answer.question.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                                </div>
+                                <div class="ml-2">
+                                    <div class="p m-0">
+                                        <b>
+                                            {{answer.question.user.first_name}}
+                                            {{answer.question.user.last_name}}
+                                        </b> |
+                                        {{answer.question.created_date |date:'d F, Y'}}
+                                    </div>
+                                    <div class="h7 text-muted">{{answer.question.user.bio}}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 id="score{{answer.question.pk}}">{{answer.question.vote_score}}</h4>
+                                <div class="score-form" data-pk="{{answer.question.pk}}"
+                                    data-page="{% if page_obj.number %}{{page_obj.number }}{% endif %}">
+                                    <input type="image" value="Up" name="up" class="Up{{answer.question.pk}} upvote"
+                                        id="upvote" data-pk="{{answer.question.pk}}"
+                                        src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
+                                    <input type="image" value="Down" name="down"
+                                        class="Down{{answer.question.pk}} downvote" data-pk="{{answer.question.pk}}"
+                                        src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <a href="{% url 'qnA:question_detail' answer.question.slug %}" target="_blank"
+                            class="card-link">
+                            <b>
+                                <h4 class="card-title crim">{{answer.question}}</h4>
+                            </b>
+                        </a>
+                        <a href="{% url 'qnA:question_detail' answer.question.slug %}" target="_blank"
+                            style="text-decoration: none; color:black;">
+                            <div class="ans">
+                                {{answer.ans | safe | truncatewords_html:60}}
+                            </div>
+                        </a>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="mr-2">
+                                    <img class="rounded-circle" width="45" height="45"
+                                        src="{% if answer.user.display_img %}{{answer.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                                </div>
+                                <div class="ml-2">
+                                    <div class="p m-0">
+                                        {% if answer.is_anonymous %}
+                                        <i>Anonymous</i>
+                                        {% else %}
+                                        <b>
+                                            {{answer.user.first_name}}
+                                            {{answer.user.last_name}}
+                                        </b> |
+                                        {{answer.created_date|date:'d F, Y'}}
+                                        {% if answer.created_date != answer.updated_date %}
+                                        (Edited)
+                                        {% endif %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="h7 text-muted">{{answer.user.bio}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <h4 class="crim text-center mb-4">{{user.first_name}} {{user.last_name}} has not pinned any answers.</h4>
+            {% endif %}
+
             {% endblock profile %}
         </div>
         <div class="col-md-3 sticky-top">
