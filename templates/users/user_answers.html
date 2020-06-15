@@ -72,6 +72,27 @@
                         <div class="h7 text-muted">{{answer.user.bio}}</div>
                     </div>
                 </div>
+                {% if user.pk == request.user.pk %}
+                <div style="background-color: #d7dddd;" class="rounded">
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
+                        </button>
+                        {% if answer.pin_answer %}
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item"
+                                href="{% url 'users:is_pin_answer' answer.user.slug 'unpin' answer.pk %}">Un-Pin
+                                Answer</a>
+                        </div>
+                        {% else %}
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item"
+                                href="{% url 'users:is_pin_answer' answer.user.slug 'pin' answer.pk %}">Pin
+                                Answer</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

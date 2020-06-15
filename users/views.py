@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.views.generic import FormView, UpdateView, DetailView, ListView
 from django.contrib.auth import authenticate, login, logout
@@ -88,6 +88,26 @@ class ProfileUpdateView(UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+
+def profile_answer_pin(request, slug, is_pin, answer_pk):
+    if request.user.is_authenticated:
+        if request.user.slug == slug:
+            user = User.objects.get(slug=slug)
+            answers = user.answer_set.filter(pk=answer_pk)
+            if is_pin == "pin":
+                for answer in answers:
+                    answer.pin_answer = True
+                    answer.save()
+            elif is_pin == "unpin":
+                for answer in answers:
+                    answer.pin_answer = False
+                    answer.save()
+            return redirect(
+                reverse("users:profile_answers", kwargs={"slug": user.slug})
+            )
+        else:
+            return redirect("qnA:home")
 
 
 def logout_request(request):
