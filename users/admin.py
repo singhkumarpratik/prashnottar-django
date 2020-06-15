@@ -16,3 +16,8 @@ class CustomUserAdmin(UserAdmin):
         "slug",
     )
     fieldsets = UserAdmin.fieldsets + (("Bio", {"fields": ("bio",),}),)
+
+
+@admin.register(models.Follow)
+class CustomFollowAdmin(admin.ModelAdmin):
+    pass

@@ -21,6 +21,11 @@ urlpatterns = [
         name="is_pin_answer",
     ),
     path("edit/", views.ProfileUpdateView.as_view(), name="edit"),
-    path("register/", views.UserRegisterView.as_view(), name="register"),
+    path(
+        "follow_unfollow/<slug:slug>",
+        views.follow_unfollow_users,
+        name="follow_unfollow",
+    ),
     path("logout/", views.logout_request, name="logout"),
+    path("register/", views.UserRegisterView.as_view(), name="register"),
 ]

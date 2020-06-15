@@ -3,7 +3,7 @@ from django.shortcuts import redirect
 from django.views.generic import FormView, UpdateView, DetailView, ListView
 from django.contrib.auth import authenticate, login, logout
 from .forms import RegisterForm, LoginForm, ProfileForm
-from .models import User
+from .models import User, Follow
 
 
 class UserLoginView(FormView):
@@ -103,11 +103,36 @@ def profile_answer_pin(request, slug, is_pin, answer_pk):
                 for answer in answers:
                     answer.pin_answer = False
                     answer.save()
+            else:
+                return redirect("qnA:home")
             return redirect(
                 reverse("users:profile_answers", kwargs={"slug": user.slug})
             )
         else:
             return redirect("qnA:home")
+
+
+def follow_unfollow_users(request, slug):
+    if request.user.is_authenticated:
+        from_user = request.user
+        to_user = User.objects.get(slug=slug)
+        if from_user != to_user:
+            following = Follow.objects.filter(from_user=from_user, to_user=to_user)
+            is_following = False
+            if following:
+                is_following = True
+            if is_following:
+                unfollow = Follow.objects.filter(
+                    from_user=from_user, to_user=to_user
+                ).first()
+                unfollow.delete()
+                is_following = False
+            else:
+                follow, created = Follow.objects.get_or_create(
+                    from_user=request.user, to_user=to_user
+                )
+                is_following = True
+    return redirect("qnA:home")
 
 
 def logout_request(request):
