@@ -20,6 +20,16 @@ urlpatterns = [
         views.profile_answer_pin,
         name="is_pin_answer",
     ),
+    path(
+        "profile/<slug:slug>/followers",
+        views.ProfileFollowersListView.as_view(),
+        name="followers",
+    ),
+    path(
+        "profile/<slug:slug>/following",
+        views.ProfileFollowingListView.as_view(),
+        name="following",
+    ),
     path("edit/", views.ProfileUpdateView.as_view(), name="edit"),
     path(
         "follow_unfollow/<slug:slug>",

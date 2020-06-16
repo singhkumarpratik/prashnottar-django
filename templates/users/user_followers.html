@@ -1,0 +1,36 @@
+{% extends "users/user_detail.html" %}
+{% load static %}
+{% block profile %}
+<div class="user-profile">
+    <h6 class="text-muted">{{followers|length}} Followers</h6>
+    {% if followers %}
+    {% for follower in followers %}
+    <div class="card mb-2">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="mr-2">
+                        <img class="rounded-circle" width="45" height="45"
+                            src="{% if follower.from_user.display_img %}{{follower.from_user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                    </div>
+                    <div class="ml-2">
+                        <div class="p m-0">
+                            <b>
+                                <a href="{% url 'users:profile' follower.from_user.slug %}">
+                                    {{follower.from_user.first_name}}
+                                    {{follower.from_user.last_name}}
+                                </a>
+                            </b>
+                        </div>
+                        <div class="h7 text-muted">{{follower.from_user.bio}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <h4>{{user.first_name}} {{user.last_name}} has no followers yet.</h4>
+    {% endif %}
+</div>
+{% endblock profile %}

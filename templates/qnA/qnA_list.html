@@ -50,8 +50,7 @@
                                 </div>
                                 <div>
                                     <h4 id="score{{question.pk}}">{{question.vote_score}}</h4>
-                                    <div class="score-form" data-pk="{{question.pk}}"
-                                        data-page="{% if page_obj.number %}{{page_obj.number }}{% endif %}">
+                                    <div class="score-form" data-pk="{{question.pk}}">
                                         <input type="image" value="Up" name="up" class="Up{{question.pk}} upvote"
                                             id="upvote" data-pk="{{question.pk}}"
                                             src="{% static 'imgs/qnA/caret-up-square.svg' %}" />

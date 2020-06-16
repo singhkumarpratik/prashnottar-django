@@ -91,6 +91,42 @@ class ProfileDetailView(DetailView):
         return context
 
 
+class ProfileFollowersListView(ListView):
+    model = User
+    template_name = "users/user_followers.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_slug = self.kwargs.get("slug")
+        user = User.objects.get(slug=user_slug)
+        is_following = Follow.objects.filter(
+            from_user=self.request.user.pk, to_user=user.pk
+        )
+        followers = Follow.objects.filter(to_user=user.pk)
+        context["is_following"] = is_following
+        context["followers"] = followers
+        context["user"] = user
+        return context
+
+
+class ProfileFollowingListView(ListView):
+    model = User
+    template_name = "users/user_following.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_slug = self.kwargs.get("slug")
+        user = User.objects.get(slug=user_slug)
+        is_following = Follow.objects.filter(
+            from_user=self.request.user.pk, to_user=user.pk
+        )
+        following = Follow.objects.filter(from_user=user.pk)
+        context["is_following"] = is_following
+        context["followings"] = following
+        context["user"] = user
+        return context
+
+
 class ProfileUpdateView(UpdateView):
     template_name = "users/edit.html"
     model = User

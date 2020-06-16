@@ -2,7 +2,6 @@
 {% load static %}
 {% block content %}
 <div class="container">
-    {{hi}}
     <div class="row">
         <div class="col-md-9">
             <div class="d-flex flex-row justify-content-center">
@@ -41,6 +40,14 @@
                     <li class="nav-item">
                         <a class="nav-link btn-outline-danger"
                             href="{% url 'users:profile_answers' user.slug %}">Answers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-outline-danger"
+                            href="{% url 'users:followers' user.slug %}">Followers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn-outline-danger"
+                            href="{% url 'users:following' user.slug %}">Following</a>
                     </li>
                 </ul>
             </div>
@@ -140,33 +147,5 @@
 </div>
 {% endblock content %}
 {% block scripts %}
-<script>
-    $("#follow").click(function (e) {
-        e.preventDefault();
-        var href = this.href;
-        console.log(href);
-        $.ajax({
-            url: href,
-            success: function (response) {
-                console.log(response["is_following"])
-                if (response["is_following"]) {
-                    $("#follow").removeClass('btn-danger').addClass('btn-outline-danger');
-                    $("#follow").html("Unfollow");
-                }
-                else {
-                    if (!(response["is_following"])) {
-                        $("#follow").removeClass('btn-outline-danger').addClass('btn-danger');
-                        $("#follow").html("Follow");
-                    }
-                    else {
-                        window.location.href = '/users/login/';
-                    }
-                }
-            },
-            error: function (response) {
-                console.log(response)
-            }
-        });
-    });
-</script>
+<script src="{% static 'js/follow_toggler.js' %}"></script>
 {% endblock scripts %}
