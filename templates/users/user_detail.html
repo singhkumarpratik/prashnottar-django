@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 <div class="container">
+    {{hi}}
     <div class="row">
         <div class="col-md-9">
             <div class="d-flex flex-row justify-content-center">
@@ -14,10 +15,17 @@
                     <h6 class="text-muted">{{user.bio}}</h6>
                 </div>
                 <hr>
-
-                {% if request.user != user %}
-                <a href="{% url 'users:follow_unfollow' user.slug %}">Follow</a>
-                {% endif %}
+                <div class="align-self-center">
+                    {% if request.user != user %}
+                    {% if is_following %}
+                    <a class="btn btn-outline-danger mr-4" href="{% url 'users:follow_unfollow' user.slug %}"
+                        role="button" id="follow">Unfollow</a>
+                    {% else %}
+                    <a class="btn btn-danger mr-4" href="{% url 'users:follow_unfollow' user.slug %}" role="button"
+                        id="follow">Follow</a>
+                    {% endif %}
+                    {% endif %}
+                </div>
 
             </div>
             <hr>
@@ -131,3 +139,34 @@
     </div>
 </div>
 {% endblock content %}
+{% block scripts %}
+<script>
+    $("#follow").click(function (e) {
+        e.preventDefault();
+        var href = this.href;
+        console.log(href);
+        $.ajax({
+            url: href,
+            success: function (response) {
+                console.log(response["is_following"])
+                if (response["is_following"]) {
+                    $("#follow").removeClass('btn-danger').addClass('btn-outline-danger');
+                    $("#follow").html("Unfollow");
+                }
+                else {
+                    if (!(response["is_following"])) {
+                        $("#follow").removeClass('btn-outline-danger').addClass('btn-danger');
+                        $("#follow").html("Follow");
+                    }
+                    else {
+                        window.location.href = '/users/login/';
+                    }
+                }
+            },
+            error: function (response) {
+                console.log(response)
+            }
+        });
+    });
+</script>
+{% endblock scripts %}

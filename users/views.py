@@ -2,6 +2,7 @@ from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.views.generic import FormView, UpdateView, DetailView, ListView
 from django.contrib.auth import authenticate, login, logout
+from django.http import JsonResponse
 from .forms import RegisterForm, LoginForm, ProfileForm
 from .models import User, Follow
 
@@ -45,7 +46,10 @@ class ProfileAnswerListView(ListView):
         user_slug = self.kwargs.get("slug")
         user = User.objects.get(slug=user_slug)
         answers = user.answer_set.all()
-        print(answers)
+        is_following = Follow.objects.filter(
+            from_user=self.request.user.pk, to_user=user.pk
+        )
+        context["is_following"] = is_following
         context["answers"] = answers
         context["user"] = user
         return context
@@ -60,6 +64,10 @@ class ProfileQuestionListView(ListView):
         user_slug = self.kwargs.get("slug")
         user = User.objects.get(slug=user_slug)
         questions = user.question_set.all()
+        is_following = Follow.objects.filter(
+            from_user=self.request.user.pk, to_user=user.pk
+        )
+        context["is_following"] = is_following
         context["questions"] = questions
         context["user"] = user
         return context
@@ -74,8 +82,11 @@ class ProfileDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ProfileDetailView, self).get_context_data(**kwargs)
         user = User.objects.get(pk=self.get_object().pk)
-        # answers = user.answer_set.all()
         answers = user.answer_set.filter(pin_answer=True).order_by("-vote_score")
+        is_following = Follow.objects.filter(
+            from_user=self.request.user.pk, to_user=user.pk
+        )
+        context["is_following"] = is_following
         context["answers"] = answers
         return context
 
@@ -132,7 +143,8 @@ def follow_unfollow_users(request, slug):
                     from_user=request.user, to_user=to_user
                 )
                 is_following = True
-    return redirect("qnA:home")
+            return JsonResponse({"is_following": is_following})
+    return redirect("users:login")
 
 
 def logout_request(request):
