@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card" style="background-color: #F1F2F2;">
+                {% if user.is_authenticated %}
+                <div class="card-body text-center">
+                    <img class="rounded-circle text-center" height="100" width="100"
+                        src="{% if request.user.display_img %}{{request.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                    <div class="h5 mt-2 mb-0"><a href="{% url 'users:profile' user.slug %}">{{user.first_name}}
+                            {{user.last_name}}</a></div>
+                    <div class="h7 text-muted">{{user.bio}}</div>
+                    <a class="btn btn-outline-danger mt-2" href="{% url 'users:edit' %}" role="button">Edit Profile</a>
+                </div>
+                {% endif %}
+            </div>
+            <div class="text-center mt-4 sticky-top">
+                <div class="h7 text-muted">
+                    Made With ❤ By <a href="https://github.com/singhkumarpratik">Pratik</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+
+            {% if question %}
+            <h3 class="crim">{{question}}</h3>
+            <hr>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Submit" class="btn btn-danger">
+            </form>
+            {% else %}
+            <div class="card mb-2">
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <input type="submit" value="Submit" class="btn btn-danger">
+                    </form>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

@@ -5,10 +5,11 @@
 {% endblock buttons %}
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-6 mt-5">
+        <div class="col-md-9 mt-5">
             <div class="card gedf-card">
                 <div class="card-body text-center">
-                    <img class="rounded-circle" height="100" width="100" src="{% if request.user.display_img %}{{request.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                    <img class="rounded-circle" height="100" width="100"
+                        src="{% if request.user.display_img %}{{request.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
                     <form action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{form.as_p}}

@@ -23,10 +23,20 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-9">
+            <a href="{% url 'qnA:ask-question' %}" target="_blank" style="text-decoration: none;">
+                <div class="card mb-2 mt-2">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label class="sr-only" for="message">post</label>
+                            <h3 class="font-weight-bold text-muted">What is your question?</h3>
+                        </div>
+                    </div>
+                </div>
+            </a>
             <div class="infinite-container">
                 {% for question in questions %}
-                <div class="infinite-item mb-4">
+                <div class="infinite-item mb-2">
                     <div class="card gedf-card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between align-items-center">

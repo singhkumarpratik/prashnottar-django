@@ -73,7 +73,7 @@ class QuestionDetailView(DetailView):
 
 
 class AskQuestionView(FormView):
-    template_name = "qnA/ask_question.html"
+    template_name = "qnA/qnA.html"
     form_class = QuestionForm
 
     def form_valid(self, form):
@@ -90,7 +90,7 @@ class AskQuestionView(FormView):
 
 
 class AnswerView(FormView):
-    template_name = "qnA/ask_question.html"
+    template_name = "qnA/qnA.html"
     form_class = AnswerForm
 
     def form_valid(self, form):
@@ -101,6 +101,13 @@ class AnswerView(FormView):
         answer.question = question
         answer.save()
         return redirect(reverse("qnA:question_detail", kwargs={"slug": question_slug}))
+
+    def get_context_data(self, **kwargs):
+        context = super(AnswerView, self).get_context_data(**kwargs)
+        question_slug = self.kwargs.get("slug")
+        question = Question.objects.get(slug=question_slug)
+        context["question"] = question
+        return context
 
 
 def vote(request, question_id, slug=None):

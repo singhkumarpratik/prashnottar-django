@@ -16,7 +16,6 @@ class Topic(models.Model):
 
 class Question(VoteModel, models.Model):
     title = models.CharField(max_length=255)
-    description = models.TextField(max_length=4000, blank=True)
     slug = AutoSlugField(populate_from="title", unique=True)
     user = models.ForeignKey(userModels.User, on_delete=models.CASCADE)
     is_anonymous = models.BooleanField(default=False)

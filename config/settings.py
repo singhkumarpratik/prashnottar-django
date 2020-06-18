@@ -141,3 +141,6 @@ COMMENTS_XTD_CONTACT_EMAIL = "helpdesk@example.com"
 COMMENTS_XTD_MAX_THREAD_LEVEL = 4
 COMMENTS_XTD_MODEL = "comments.models.MyComment"
 COMMENTS_XTD_FORM_CLASS = "comments.forms.MyCommentForm"
+
+SUMMERNOTE_THEME = "bs4"
+SUMMERNOTE_CONFIG = {"summernote": {"width": "100%",}}

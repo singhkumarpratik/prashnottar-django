@@ -1,3 +1,4 @@
+from django import forms
 from django.forms import ModelForm
 from .models import *
 from django_summernote.widgets import SummernoteWidget, SummernoteInplaceWidget
@@ -8,12 +9,18 @@ class QuestionForm(ModelForm):
         model = Question
         fields = [
             "title",
-            "description",
             "is_anonymous",
         ]
         widgets = {
-            "description": SummernoteWidget(),
+            "title": forms.TextInput(
+                attrs={
+                    "class": "form-control input-lg",
+                    "placeholder": "What is your question?",
+                    "style": "height: 70px;",
+                }
+            ),
         }
+        labels = {"title": "", "is_anonymous": "Ask Anonymously"}
 
 
 class AnswerForm(ModelForm):
@@ -26,3 +33,4 @@ class AnswerForm(ModelForm):
         widgets = {
             "ans": SummernoteWidget(),
         }
+        labels = {"ans": "", "is_anonymous": "Answer Anonymously"}
