@@ -91,7 +91,7 @@
                             </div>
                         </div>
                         {% else %}
-                        <a href="{% url 'users:login' %}">Login to Participate</a>
+                        <a href="{% url 'users:login' %}">Login to Comment</a>
                         {% endif %}
                         {% get_comment_count for answer as comment_count %}
                         {% if comment_count %}

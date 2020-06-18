@@ -3,14 +3,15 @@ from django.shortcuts import redirect
 from django.views.generic import FormView, UpdateView, DetailView, ListView
 from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import RegisterForm, LoginForm, ProfileForm
 from .models import User, Follow
+from .mixins import LogoutRequiredMixin
 
 
-class UserLoginView(FormView):
+class UserLoginView(LogoutRequiredMixin, FormView):
     form_class = LoginForm
     template_name = "users/login.html"
-    success_url = reverse_lazy("qnA:home")
 
     def form_valid(self, form):
         form.save()
@@ -21,8 +22,14 @@ class UserLoginView(FormView):
             login(self.request, user)
         return super().form_valid(form)
 
+    def get_success_url(self):
+        next = self.request.GET.get("next")
+        if next:
+            return next
+        return reverse("qnA:home")
 
-class UserRegisterView(FormView):
+
+class UserRegisterView(LogoutRequiredMixin, FormView):
     form_class = RegisterForm
     template_name = "users/register.html"
     success_url = reverse_lazy("qnA:home")
@@ -127,10 +134,11 @@ class ProfileFollowingListView(ListView):
         return context
 
 
-class ProfileUpdateView(UpdateView):
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "users/edit.html"
     model = User
     form_class = ProfileForm
+    login_url = "/users/login/"
     success_url = reverse_lazy("qnA:home")
 
     def get_object(self, queryset=None):

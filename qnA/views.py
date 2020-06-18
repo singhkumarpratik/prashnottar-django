@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
+from django.contrib.auth.mixins import LoginRequiredMixin
 from comments.models import MyComment
 from .models import Question, Answer, Topic
 from .forms import *
@@ -72,7 +73,8 @@ class QuestionDetailView(DetailView):
         return context
 
 
-class AskQuestionView(FormView):
+class AskQuestionView(LoginRequiredMixin, FormView):
+    login_url = "/users/login/"
     template_name = "qnA/qnA.html"
     form_class = QuestionForm
 
@@ -89,7 +91,8 @@ class AskQuestionView(FormView):
         return redirect(reverse("qnA:question_detail", kwargs={"slug": question.slug}))
 
 
-class AnswerView(FormView):
+class AnswerView(LoginRequiredMixin, FormView):
+    login_url = "/users/login/"
     template_name = "qnA/qnA.html"
     form_class = AnswerForm
 
