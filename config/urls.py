@@ -23,6 +23,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("qnA.urls", namespace="qnA")),
     path("users/", include("users.urls", namespace="users")),
+    path("notifications/", include("notifications.urls", namespace="notifications")),
     path("summernote/", include("django_summernote.urls")),
     re_path(r"^comments/", include("django_comments_xtd.urls")),
 ]

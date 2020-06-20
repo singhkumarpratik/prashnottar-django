@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "users",
     "qnA",
     "comments",
+    "notifications",
 ]
 
 THIRD_PARTY_APPS = [
