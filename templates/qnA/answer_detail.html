@@ -28,20 +28,21 @@
         </div>
         <div class="col-md-9">
             <div class="question">
-                <h3 class="crim">{{question}}</h3>
+                <h3 class="crim">{{user_answer.question}}</h3>
                 <h6><a href="{% url 'qnA:answer' question.slug %}" class="badge badge-danger"><img
                             src="{% static 'imgs/qnA/pencil-square.svg' %}" alt="Answer">
                         Answer</a> |
-                    <b>{{question.answer_set.count}} Answers</b>
+                    <b>{{user_answer.user.first_name}} {{user_answer.user.last_name}}'s Answer</b>
                 </h6>
             </div>
             <hr>
-            {% if question.answer_set.count == 0 %}
-            <h4 class="text-center">No Answers</h4>
-            {% else %}
-            {% for answer in question.answer_set.all %}
             <div class="card gedf-card mb-4">
-                <div class="card-header">
+                <div class="card-body">
+                    <div class="ans">
+                        {{user_answer.ans | safe}}
+                    </div>
+                </div>
+                <div class="card-footer">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="mr-2">
@@ -50,52 +51,28 @@
                             <div class="ml-2">
                                 <div class="p m-0">
                                     <b>
-                                        {% if answer.is_anonymous %}
+                                        {% if user_answer.is_anonymous %}
                                         <i>Anonymous</i>
                                         {% else %}
-                                        {{answer.user.first_name}} {{answer.user.last_name}}
+                                        {{user_answer.user.first_name}} {{user_answer.user.last_name}}
                                         {% endif %}
                                     </b> |
                                     {{question.created_date |date:'d F, Y'}}
-                                    {% if answer.created_date != answer.updated_date %}
+                                    {% if user_answer.created_date != user_answer.updated_date %}
                                     (Edited)
                                     {% endif %}
                                 </div>
-                                <div class="h7 text-muted">{{answer.user.bio}}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="ans">
-                        {{answer.ans | safe}}
-                    </div>
-                </div>
-                {% if question.answer_set.all.0.ans %}
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h4 id="score{{question.pk}}">{{question.vote_score}}</h4>
-                                <div class="score-form" data-pk="{{question.pk}}"
-                                    data-page="{% if page_obj.number %}{{page_obj.number }}{% endif %}">
-                                    <input type="image" value="Up" name="up" class="Up{{question.pk}} upvote" id="upvote"
-                                        data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
-                                    <input type="image" value="Down" name="down" class="Down{{question.pk}} downvote"
-                                        data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
-                                </div>
+                                <div class="h7 text-muted">{{user_answer.user.bio}}</div>
                             </div>
                         </div>
                         <div>
-                            <div style="background-color: #d7dddd;" class="rounded">
-                                <div class="dropdown">
-                                    <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
-                                    </button>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item"
-                                            href="{% url 'qnA:answer_detail' answer.question.slug answer.user.slug answer.question.pk answer.user.pk %}">Share Answer</a>
-                                    </div>
-                                </div>
+                            <h4 id="score{{question.pk}}">{{question.vote_score}}</h4>
+                            <div class="score-form" data-pk="{{question.pk}}"
+                                data-page="{% if page_obj.number %}{{page_obj.number }}{% endif %}">
+                                <input type="image" value="Up" name="up" class="Up{{question.pk}} upvote" id="upvote"
+                                    data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
+                                <input type="image" value="Down" name="down" class="Down{{question.pk}} downvote"
+                                    data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
                             </div>
                         </div>
                     </div>
@@ -105,13 +82,13 @@
                         <div class="comment">
                             <H4 class="text-center">Post your comment</H4>
                             <div class="well">
-                                {% render_comment_form for answer %}
+                                {% render_comment_form for user_answer %}
                             </div>
                         </div>
                         {% else %}
                         <a href="{% url 'users:login' %}">Login to Comment</a>
                         {% endif %}
-                        {% get_comment_count for answer as comment_count %}
+                        {% get_comment_count for user_answer as comment_count %}
                         {% if comment_count %}
                         <H5 class="text-center">
                             {% blocktrans count comment_count=comment_count %}
@@ -125,25 +102,12 @@
                         {% if comment_count %}
                         <hr />
                         <ul class="media-list" id="comment-list">
-                            {% render_xtdcomment_tree for answer %}
+                            {% render_xtdcomment_tree for user_answer %}
                         </ul>
                         {% endif %}
                     </div>
                 </div>
-                {% else %}
-                <div class="card-footer">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="ml-2">
-                                <h4><a href="{% url 'qnA:answer' question.slug %}">Answer Now</a></h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
             </div>
-            {% endfor %}
-            {% endif %}
         </div>
     </div>
 </div>

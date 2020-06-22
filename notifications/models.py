@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from users.models import User
-from qnA.models import Answer
+from qnA.models import Question, Answer
 
 
 class Notification(models.Model):
@@ -14,20 +14,22 @@ class Notification(models.Model):
     to_user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="notification_to_people"
     )
-    question_slug = models.SlugField()
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, related_name="notif_question"
+    )
+    # question_slug = models.SlugField()
 
 
 @receiver(post_save, sender=Answer)
 def notification(sender, **kwargs):
     from_user = kwargs.get("instance").user
     to_user = kwargs.get("instance").question.user
-    question = kwargs.get("instance").question.title
-    slug = kwargs.get("instance").question.slug
+    question = kwargs.get("instance").question
     if from_user != to_user:
         """Not sending notification in scenarios such as user answering his/her own question"""
         Notification.objects.create(
             from_user=from_user,
             to_user=to_user,
             msg=f"{from_user.first_name} {from_user.last_name} answered your question: {question}",
-            question_slug=slug,
+            question=question,
         )

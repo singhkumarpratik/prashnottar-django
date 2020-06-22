@@ -22,17 +22,8 @@
             </div>
         </div>
         <div class="col-md-9">
-            <div class="card mb-2 mt-2">
-                <div class="card-body">
-                    <div class="form-group">
-                        <label class="sr-only" for="message">post</label>
-                        <h3 class="font-weight-bold text-muted">What is your question?</h3>
-                        {{notifications}}
-                    </div>
-                </div>
-            </div>
             {% for notification in notifications %}
-            <div class="card">
+            <div class="card mb-2" {% if notification.is_seen %} style="background-color: #F1F2F2;" {% endif %}>
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex justify-content-between align-items-center">
@@ -42,8 +33,8 @@
                                         src="{% if notification.from_user.display_img %}{{notification.from_user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
                                 </a>
                             </div>
-                            <a href="{% url 'qnA:question_detail' notification.question_slug %}"
-                                class="text-decoration-none">
+                            <a href="{% url 'notifications:notification_detail' notification.pk %}"
+                                class="text-decoration-none read">
                                 <div class="ml-2">
                                     <div class="p m-0">
                                         <b>
@@ -53,19 +44,10 @@
                                 </div>
                             </a>
                         </div>
-                        <div>
-                            <h4 id="score{{question.pk}}">{{question.vote_score}}</h4>
-                            <div class="score-form" data-pk="{{question.pk}}">
-                                <input type="image" value="Up" name="up" class="Up{{question.pk}} upvote" id="upvote"
-                                    data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
-                                <input type="image" value="Down" name="down" class="Down{{question.pk}} downvote"
-                                    data-pk="{{question.pk}}" src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
-                            </div>
-                        </div>
                     </div>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
             {% if is_paginated %}
             <div class="d-flex flex-row justify-content-center align-items-center">
                 <ul class="pagination">
@@ -98,5 +80,5 @@
     </div>
     {% endblock content %}
     {% block scripts %}
-    <script src="{% static 'js/vote.js' %}"></script>
+    <script src="{% static 'js/notification.js' %}"></script>
     {% endblock scripts %}

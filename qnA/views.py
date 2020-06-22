@@ -113,6 +113,20 @@ class AnswerView(LoginRequiredMixin, FormView):
         return context
 
 
+class AnswerDetailView(DetailView):
+    queryset = Question.objects.all()
+    template_name = "qnA/answer_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(AnswerDetailView, self).get_context_data(**kwargs)
+        question_pk = self.kwargs.get("question_pk")
+        user_pk = self.kwargs.get("user_pk")
+        question = Question.objects.get(pk=question_pk)
+        user_answer = question.answer_set.get(user=user_pk)
+        context["user_answer"] = user_answer
+        return context
+
+
 def vote(request, question_id, slug=None):
     if request.user.is_authenticated:
         if request.is_ajax and request.method == "GET":
