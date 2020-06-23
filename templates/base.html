@@ -1,4 +1,5 @@
 {% load static %}
+{% load notifications %}
 <!doctype html>
 <html lang="en">
 
@@ -26,10 +27,27 @@
   .sticky-top {
     top: 0.5em;
   }
+
+  .item {
+    position: relative;
+    display: inline-block;
+  }
+
+  .notify-badge {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background: #dc3545;
+    text-align: center;
+    border-radius: 30px 30px 30px 30px;
+    color: white;
+    padding: 5px 10px;
+    font-size: 15px;
+  }
 </style>
 
 <body style="background-color: #F1F2F2;">
-  <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #FFFFFF;">
+  <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #f8f9fa;">
     <div class="container">
       <a class="navbar-brand" href="{% url 'qnA:home' %}">
         <img src="{% static 'imgs/logo.png' %}" height="25" loading="lazy">
@@ -50,10 +68,12 @@
         </ul>
         {% block buttons %}
         {% if user.is_authenticated %}
-        <a class="btn btn-danger mr-4" href="{% url 'notifications:notifications' %}" role="button"> <img
-            src="{% static 'imgs/qnA/envelope-fill.svg' %}" alt="Notifications" width="20">
-          <span class="badge badge-light">9</span>
-        </a>
+        <div class="item">
+          <a class="mr-4 btn btn-light " href="{% url 'notifications:notifications' %}">
+            <span class="notify-badge">{% unread_notification user %}</span>
+            Notifications
+          </a>
+        </div>
         <a class="btn btn-danger mr-4" href="{% url 'qnA:ask-question' %}" role="button">Ask Question</a>
         <a class="btn btn-danger" href="{% url 'users:logout' %}" role="button">Logout</a>
         {% else %}
