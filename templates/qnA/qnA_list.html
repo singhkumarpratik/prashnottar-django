@@ -10,9 +10,10 @@
                 <div class="card-body text-center">
                     <img class="rounded-circle text-center" height="100" width="100"
                         src="{% if request.user.display_img %}{{request.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
-                    <div class="h5 mt-2 mb-0"><a href="{% url 'users:profile' user.slug %}">{{user.first_name}}
-                            {{user.last_name}}</a></div>
-                    <div class="h7 text-muted">{{user.bio}}</div>
+                    <div class="h5 mt-2 mb-0"><a href="{% url 'users:profile' user.slug %}"
+                            class="text-decoration-none">{{user.first_name | title }}
+                            {{user.last_name | title}}</a></div>
+                    <div class="h7 text-muted">{{user.bio | title}}</div>
                     <a class="btn btn-outline-danger mt-2" href="{% url 'users:edit' %}" role="button">Edit Profile</a>
                 </div>
                 {% endif %}
@@ -42,20 +43,36 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="mr-2">
+
+                                        {% if not question.is_anonymous %}
+                                        <a href="{% url 'users:profile' question.user.slug %}">
+                                            <img class="rounded-circle" width="45" height="45"
+                                                src="{% if question.user.display_img %}{{question.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                                        </a>
+                                        {% else %}
                                         <img class="rounded-circle" width="45" height="45"
-                                            src="{% if question.user.display_img %}{{question.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                                            src="{% static 'imgs/no_display_img.jpg' %}">
+                                        {% endif %}
+
                                     </div>
                                     <div class="ml-2">
                                         <div class="p m-0">
+                                            {% if not question.is_anonymous %}
                                             <b>
-                                                <a href="{% url 'users:profile' question.user.slug %}">
-                                                    {{question.user.first_name}}
-                                                    {{question.user.last_name}}
+                                                <a href="{% url 'users:profile' question.user.slug %}"
+                                                    class="text-decoration-none">
+                                                    {{question.user.first_name | title }}
+                                                    {{question.user.last_name | title }}
                                                 </a>
                                             </b> |
+                                            {% else %}
+                                            <i>Anonymous</i> |
+                                            {% endif %}
                                             {{question.created_date |date:'d F, Y'}}
                                         </div>
+                                        {% if not question.is_anonymous %}
                                         <div class="h7 text-muted">{{question.user.bio}}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                                 <div>
@@ -93,27 +110,41 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="mr-2">
+
+                                        {% if not question.answer_set.all.0.is_anonymous %}
+                                        <a href="{% url 'users:profile' question.answer_set.all.0.user.slug %}"
+                                            class="text-decoration-none">
+                                            <img class="rounded-circle" width="45" height="45"
+                                                src="{% if question.answer_set.all.0.user.display_img %}{{question.answer_set.all.0.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                                        </a>
+                                        {% else %}
                                         <img class="rounded-circle" width="45" height="45"
-                                            src="{% if question.answer_set.all.0.user.display_img %}{{question.answer_set.all.0.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                                            src="{% static 'imgs/no_display_img.jpg' %}">
+                                        {% endif %}
+
                                     </div>
                                     <div class="ml-2">
                                         <div class="p m-0">
                                             {% if question.answer_set.all.0.is_anonymous %}
-                                            <i>Anonymous</i>
+                                            <i>Anonymous</i> |
                                             {% else %}
                                             <b>
-                                                <a href="{% url 'users:profile' question.answer_set.all.0.user.slug %}">
-                                                    {{question.answer_set.all.0.user.first_name}}
-                                                    {{question.answer_set.all.0.user.last_name}}
+                                                <a href="{% url 'users:profile' question.answer_set.all.0.user.slug %}"
+                                                    class="text-decoration-none">
+                                                    {{question.answer_set.all.0.user.first_name | title }}
+                                                    {{question.answer_set.all.0.user.last_name | title }}
                                                 </a>
                                             </b> |
+                                            {% endif %}
                                             {{question.answer_set.all.0.created_date|date:'d F, Y'}}
                                             {% if question.answer_set.all.0.created_date != question.answer_set.all.0.updated_date %}
                                             (Edited)
                                             {% endif %}
-                                            {% endif %}
                                         </div>
+                                        {% if not question.answer_set.all.0.is_anonymous %}
                                         <div class="h7 text-muted">{{question.answer_set.all.0.user.bio}}</div>
+                                        {% endif %}
+
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +154,8 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div class="ml-2">
-                                        <h4><a href="{% url 'qnA:answer' question.slug %}">Answer Now</a></h4>
+                                        <h4><a href="{% url 'qnA:answer' question.slug %}"
+                                                class="text-decoration-none">Answer Now</a></h4>
                                     </div>
                                 </div>
                             </div>

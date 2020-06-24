@@ -1,0 +1,33 @@
+.crim {
+    font-family: 'Crimson Text', serif;
+    font-weight: 600;
+  }
+
+  .card-link {
+    color: black;
+  }
+
+  .card-link:hover {
+    color: #B92B27;
+  }
+
+  .sticky-top {
+    top: 0.5em;
+  }
+
+  .item {
+    position: relative;
+    display: inline-block;
+  }
+
+  .notify-badge {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    background: #dc3545;
+    text-align: center;
+    border-radius: 30px 30px 30px 30px;
+    color: white;
+    padding: 5px 10px;
+    font-size: 15px;
+  }

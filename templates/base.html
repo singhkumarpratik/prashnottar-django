@@ -8,43 +8,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   <title>{% block title %}{% endblock %}</title>
 </head>
-<style>
-  .crim {
-    font-family: 'Crimson Text', serif;
-    font-weight: 600;
-  }
-
-  .card-link {
-    color: black;
-  }
-
-  .card-link:hover {
-    color: #B92B27;
-  }
-
-  .sticky-top {
-    top: 0.5em;
-  }
-
-  .item {
-    position: relative;
-    display: inline-block;
-  }
-
-  .notify-badge {
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-    background: #dc3545;
-    text-align: center;
-    border-radius: 30px 30px 30px 30px;
-    color: white;
-    padding: 5px 10px;
-    font-size: 15px;
-  }
-</style>
 
 <body style="background-color: #F1F2F2;">
   <nav class="navbar navbar-expand-lg navbar-light mb-4" style="background-color: #f8f9fa;">
