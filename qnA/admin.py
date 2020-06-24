@@ -25,6 +25,6 @@ class CustomQuestionAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(models.Topic)
+@admin.register(models.Topic, models.FollowQuestion)
 class CustomQuestionAdmin(admin.ModelAdmin):
     pass

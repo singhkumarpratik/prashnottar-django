@@ -52,3 +52,12 @@ class Answer(VoteModel, models.Model):
 
     def __str__(self):
         return f"{self.user.first_name} on {self.created_date}"
+
+
+class FollowQuestion(models.Model):
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, related_name="follow_question",
+    )
+    user = models.ForeignKey(
+        userModels.User, on_delete=models.CASCADE, related_name="follow_question_by"
+    )

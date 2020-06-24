@@ -10,7 +10,7 @@ from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from comments.models import MyComment
-from .models import Question, Answer, Topic
+from .models import *
 from .forms import *
 from .get_topics import *
 
@@ -69,6 +69,10 @@ class QuestionDetailView(DetailView):
                     break
             if max_matches:
                 break
+        is_following = FollowQuestion.objects.filter(
+            user=self.request.user.pk, question=self.get_object()
+        )
+        context["is_following"] = is_following
         context["related_questions"] = related_questions
         return context
 
@@ -125,6 +129,30 @@ class AnswerDetailView(DetailView):
         user_answer = question.answer_set.get(user=user_pk)
         context["user_answer"] = user_answer
         return context
+
+
+def follow_question(request, question_slug):
+    if request.user.is_authenticated:
+        user = request.user
+        question_slug = question_slug
+        question = Question.objects.get(slug=question_slug)
+        if question.user != user:
+            """
+            users who created the question will automatically be notified when a new answer comes. Therefore,
+            this check is done to prevent them from getting notification twice.
+            """
+            try:
+                # FollowQuestion.objects.get(question=question, user=user)
+                FollowQuestion.objects.get(question=question, user=user).delete()
+                is_following = False
+            except:
+                FollowQuestion.objects.create(question=question, user=user)
+                is_following = True
+            return JsonResponse(
+                {"is_following": is_following, "is_question_follow": True}
+            )
+    # print(question_slug, request.user)
+    return redirect("users:login")
 
 
 def vote(request, question_id, slug=None):
