@@ -28,10 +28,15 @@
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="mr-2">
+                                {% if not notification.is_anonymous %}
                                 <a href="{% url 'users:profile' notification.from_user.slug %}">
                                     <img class="rounded-circle" width="45" height="45"
                                         src="{% if notification.from_user.display_img %}{{notification.from_user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
                                 </a>
+                                {% else %}
+                                <img class="rounded-circle" width="45" height="45"
+                                    src="{% static 'imgs/no_display_img.jpg' %}">
+                                {% endif %}
                             </div>
                             <a href="{% url 'notifications:notification_detail' notification.pk %}"
                                 class="text-decoration-none read">
