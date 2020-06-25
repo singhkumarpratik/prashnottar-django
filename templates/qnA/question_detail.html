@@ -72,7 +72,10 @@
                                     <i>Anonymous</i>
                                     {% else %}
                                     <b>
-                                        {{answer.user.first_name | title}} {{answer.user.last_name | title}}
+                                        <a href="{% url 'users:profile' answer.user.slug %}"
+                                            class="text-decoration-none">
+                                            {{answer.user.first_name | title}} {{answer.user.last_name | title}}
+                                        </a>
                                     </b>
                                     {% endif %}
                                     |

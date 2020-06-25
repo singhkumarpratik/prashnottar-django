@@ -24,12 +24,13 @@
                 </div>
                 <div>
                     <h4 id="score{{answer.question.pk}}">{{answer.question.vote_score}}</h4>
-                    <div class="score-form" data-pk="{{answer.question.pk}}"
-                        data-page="{% if page_obj.number %}{{page_obj.number }}{% endif %}">
+                    <div class="score-form" data-pk="{{answer.question.pk}}" data-profile="True">
                         <input type="image" value="Up" name="up" class="Up{{answer.question.pk}} upvote" id="upvote"
-                            data-pk="{{answer.question.pk}}" src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
+                            data-pk="{{answer.question.pk}}" data-profile="True"
+                            src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
                         <input type="image" value="Down" name="down" class="Down{{answer.question.pk}} downvote"
-                            data-pk="{{answer.question.pk}}" src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
+                            data-pk="{{answer.question.pk}}" data-profile="True"
+                            src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
                     </div>
                 </div>
             </div>

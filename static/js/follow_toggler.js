@@ -22,12 +22,14 @@ $("#follow").click(function (e) {
                         $("#follow").html("Follow Question");
                     }
                     else {
-                        $("#follow").removeClass('btn-outline-danger').addClass('btn-danger');
-                        $("#follow").html("Follow");
+                        if (response["is_user_follow"]) {
+                            $("#follow").removeClass('btn-outline-danger').addClass('btn-danger');
+                            $("#follow").html("Follow");
+                        }
+                        else {
+                            window.location.href = '/users/login/';
+                        }
                     }
-                }
-                else {
-                    window.location.href = '/users/login/';
                 }
             }
         },

@@ -151,7 +151,6 @@ def follow_question(request, question_slug):
             return JsonResponse(
                 {"is_following": is_following, "is_question_follow": True}
             )
-    # print(question_slug, request.user)
     return redirect("users:login")
 
 

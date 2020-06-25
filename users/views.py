@@ -187,7 +187,7 @@ def follow_unfollow_users(request, slug):
                     from_user=request.user, to_user=to_user
                 )
                 is_following = True
-            return JsonResponse({"is_following": is_following})
+            return JsonResponse({"is_following": is_following, "is_user_follow": True})
     return redirect("users:login")
 
 
