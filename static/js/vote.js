@@ -41,7 +41,6 @@ $(document).ready(function () {
 $('input[name="up"]').click(function (e) {
     e.preventDefault();
     var is_comment = $(this).attr("data-is-comment");
-    console.log(is_comment);
     var question_pk = $(this).attr("data-pk");
     var url = question_pk + "/vote";
     $.ajax({
@@ -106,7 +105,6 @@ $('input[name="down"]').click(function (e) {
     var is_comment = $(this).attr("data-is-comment");
     var question_pk = $(this).attr("data-pk");
     var url = question_pk + "/vote";
-    console.log(url)
     $.ajax({
         type: 'GET',
         url: url,
