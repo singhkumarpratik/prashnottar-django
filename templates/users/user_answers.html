@@ -3,6 +3,7 @@
 {% block profile %}
 <div class="user-profile">
     {% for answer in answers %}
+    {% if not answer.is_anonymous %}
     <div class="card mb-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
@@ -13,10 +14,12 @@
                     </div>
                     <div class="ml-2">
                         <div class="p m-0">
-                            <b>
-                                {{answer.question.user.first_name}}
-                                {{answer.question.user.last_name}}
-                            </b> |
+                            <a href="{% url 'users:profile' answer.question.user.slug %}" class="text-decoration-none">
+                                <b>
+                                    {{answer.question.user.first_name | title}}
+                                    {{answer.question.user.last_name | title}}
+                                </b>
+                            </a> |
                             {{answer.question.created_date |date:'d F, Y'}}
                         </div>
                         <div class="h7 text-muted">{{answer.question.user.bio}}</div>
@@ -60,10 +63,12 @@
                             {% if answer.is_anonymous %}
                             <i>Anonymous</i>
                             {% else %}
-                            <b>
-                                {{answer.user.first_name}}
-                                {{answer.user.last_name}}
-                            </b> |
+                            <a href="{% url 'users:profile' answer.user.slug %}" class="text-decoration-none">
+                                <b>
+                                    {{answer.user.first_name | title}}
+                                    {{answer.user.last_name | title}}
+                                </b>
+                            </a> |
                             {{answer.created_date|date:'d F, Y'}}
                             {% if answer.created_date != answer.updated_date %}
                             (Edited)
@@ -97,6 +102,114 @@
             </div>
         </div>
     </div>
+    {% elif answer.user == request.user %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="mr-2">
+                        <img class="rounded-circle" width="45" height="45"
+                            src="{% if answer.question.user.display_img %}{{answer.question.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                    </div>
+                    <div class="ml-2">
+                        <div class="p m-0">
+                            <a href="{% url 'users:profile' answer.question.user.slug %}" class="text-decoration-none">
+                                <b>
+                                    {{answer.question.user.first_name | title}}
+                                    {{answer.question.user.last_name | title}}
+                                </b>
+                            </a> |
+                            {{answer.question.created_date |date:'d F, Y'}}
+                        </div>
+                        <div class="h7 text-muted">{{answer.question.user.bio}}</div>
+                    </div>
+                </div>
+                <div>
+                    <h4 id="score{{answer.question.pk}}">{{answer.question.vote_score}}</h4>
+                    <div class="score-form" data-pk="{{answer.question.pk}}" data-profile="True">
+                        <input type="image" value="Up" name="up" class="Up{{answer.question.pk}} upvote" id="upvote"
+                            data-pk="{{answer.question.pk}}" data-profile="True"
+                            src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
+                        <input type="image" value="Down" name="down" class="Down{{answer.question.pk}} downvote"
+                            data-pk="{{answer.question.pk}}" data-profile="True"
+                            src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <a href="{% url 'qnA:question_detail' answer.question.slug %}" target="_blank" class="card-link">
+                <b>
+                    <h4 class="card-title crim">{{answer.question}}</h4>
+                </b>
+            </a>
+            <a href="{% url 'qnA:question_detail' answer.question.slug %}" target="_blank"
+                style="text-decoration: none; color:black;">
+                <div class="ans">
+                    {{answer.ans | safe | truncatewords_html:60}}
+                </div>
+            </a>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="mr-2">
+                        <img class="rounded-circle" width="45" height="45"
+                            src="{% if answer.user.display_img %}{{answer.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                    </div>
+                    <div class="ml-2">
+                        <div class="p m-0">
+                            {% if answer.is_anonymous %}
+                            <a href="{% url 'users:profile' answer.user.slug %}" class="text-decoration-none">
+                                <b>
+                                    {{answer.user.first_name | title}}
+                                    {{answer.user.last_name | title}}
+                                </b>
+                            </a>
+                            <i>(You answered this anonymously)</i>
+                            {% else %}
+                            <a href="{% url 'users:profile' answer.user.slug %}" class="text-decoration-none">
+                                <b>
+                                    {{answer.user.first_name | title}}
+                                    {{answer.user.last_name | title}}
+                                </b>
+                            </a> |
+                            {{answer.created_date|date:'d F, Y'}}
+                            {% if answer.created_date != answer.updated_date %}
+                            (Edited)
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="h7 text-muted">{{answer.user.bio}}</div>
+                    </div>
+                </div>
+                {% if not answer.is_anonymous %}
+                {% if user.pk == request.user.pk %}
+                <div style="background-color: #d7dddd;" class="rounded">
+                    <div class="dropdown">
+                        <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
+                        </button>
+                        {% if answer.pin_answer %}
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item"
+                                href="{% url 'users:is_pin_answer' answer.user.slug 'unpin' answer.pk %}">Un-Pin
+                                Answer</a>
+                        </div>
+                        {% else %}
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item"
+                                href="{% url 'users:is_pin_answer' answer.user.slug 'pin' answer.pk %}">Pin
+                                Answer</a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
     {% endfor %}
 </div>
 {% endblock profile %}

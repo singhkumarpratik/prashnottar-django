@@ -3,6 +3,7 @@
 {% block profile %}
 <div class="user-profile">
     {% for question in questions %}
+    {% if not question.is_anonymous %}
     <div class="card mb-4">
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
@@ -13,10 +14,12 @@
                     </div>
                     <div class="ml-2">
                         <div class="p m-0">
-                            <b>
-                                {{question.user.first_name}}
-                                {{question.user.last_name}}
-                            </b> |
+                            <a href="{% url 'users:profile' question.user.slug %}" class="text-decoration-none">
+                                <b>
+                                    {{question.user.first_name | title}}
+                                    {{question.user.last_name | title}}
+                                </b>
+                            </a> |
                             {{question.created_date |date:'d F, Y'}}
                         </div>
                         <div class="h7 text-muted">{{question.user.bio}}</div>
@@ -44,38 +47,169 @@
             <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank"
                 style="text-decoration: none; color:black;">
                 <div class="ans">
+                    {% if question.answer_set.all.0.ans %}
                     {{question.answer_set.all.0.ans | safe | truncatewords_html:60}}
+                    {% else %}
+                    No Answer
+                    {% endif %}
                 </div>
             </a>
         </div>
+        {% if question.answer_set.all.0.ans %}
         <div class="card-footer">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="mr-2">
+                        {% if not question.answer_set.all.0.is_anonymous %}
                         <img class="rounded-circle" width="45" height="45"
                             src="{% if question.answer_set.all.0.user.display_img %}{{question.answer_set.all.0.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                        {% else %}
+                        <img class="rounded-circle" width="45" height="45" src="{% static 'imgs/no_display_img.jpg' %}">
+                        {% endif %}
                     </div>
                     <div class="ml-2">
                         <div class="p m-0">
                             {% if question.answer_set.all.0.is_anonymous %}
                             <i>Anonymous</i>
                             {% else %}
-                            <b>
-                                {{question.answer_set.all.0.user.first_name}}
-                                {{question.answer_set.all.0.user.last_name}}
-                            </b> |
+                            <a href="{% url 'users:profile' question.answer_set.all.0.user.slug %}"
+                                class="text-decoration-none">
+                                <b>
+                                    {{question.answer_set.all.0.user.first_name | title}}
+                                    {{question.answer_set.all.0.user.last_name | title}}
+                                </b>
+                            </a> |
                             {{question.answer_set.all.0.created_date|date:'d F, Y'}}
                             {% if question.answer_set.all.0.created_date != question.answer_set.all.0.updated_date %}
                             (Edited)
                             {% endif %}
                             {% endif %}
                         </div>
+                        {% if not question.answer_set.all.0.is_anonymous %}
                         <div class="h7 text-muted">{{question.answer_set.all.0.user.bio}}</div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+        {% else %}
+        <div class="card-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="ml-2">
+                        <h4><a href="{% url 'qnA:answer' question.slug %}" class="text-decoration-none">Answer Now</a>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
+    {% elif question.user == request.user %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="mr-2">
+                        <img class="rounded-circle" width="45" height="45"
+                            src="{% if question.user.display_img %}{{question.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                    </div>
+                    <div class="ml-2">
+                        <div class="p m-0">
+                            <a href="{% url 'users:profile' question.user.slug %}" class="text-decoration-none">
+                                <b>
+                                    {{question.user.first_name | title}}
+                                    {{question.user.last_name  | title}}
+                                </b>
+                            </a>
+                            <i>(You asked this Anonymously)</i> |
+                            {{question.created_date |date:'d F, Y'}}
+                        </div>
+                        <div class="h7 text-muted">{{question.user.bio}}</div>
+                    </div>
+                </div>
+                <div>
+                    <h4 id="score{{question.pk}}">{{question.vote_score}}</h4>
+                    <div class="score-form" data-pk="{{question.pk}}" data-profile="True">
+                        <input type="image" value="Up" name="up" class="Up{{question.pk}} upvote" id="upvote"
+                            data-pk="{{question.pk}}" data-profile="True"
+                            src="{% static 'imgs/qnA/caret-up-square.svg' %}" />
+                        <input type="image" value="Down" name="down" class="Down{{question.pk}} downvote"
+                            data-pk="{{question.pk}}" data-profile="True"
+                            src="{% static 'imgs/qnA/caret-down-square.svg' %}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank" class="card-link">
+                <b>
+                    <h4 class="card-title crim">{{question}}</h4>
+                </b>
+            </a>
+            <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank"
+                style="text-decoration: none; color:black;">
+                <div class="ans">
+                    {% if question.answer_set.all.0.ans %}
+                    {{question.answer_set.all.0.ans | safe | truncatewords_html:60}}
+                    {% else %}
+                    No Answer
+                    {% endif %}
+                </div>
+            </a>
+        </div>
+        {% if question.answer_set.all.0.ans %}
+        <div class="card-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="mr-2">
+                        {% if not question.answer_set.all.0.is_anonymous %}
+                        <img class="rounded-circle" width="45" height="45"
+                            src="{% if question.answer_set.all.0.user.display_img %}{{question.answer_set.all.0.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                        {% else %}
+                        <img class="rounded-circle" width="45" height="45" src="{% static 'imgs/no_display_img.jpg' %}">
+                        {% endif %}
+
+                    </div>
+                    <div class="ml-2">
+                        <div class="p m-0">
+                            {% if question.answer_set.all.0.is_anonymous %}
+                            <i>Anonymous</i>
+                            {% else %}
+                            <a href="{% url 'users:profile' question.answer_set.all.0.user.slug %}"
+                                class="text-decoration-none">
+                                <b>
+                                    {{question.answer_set.all.0.user.first_name | title}}
+                                    {{question.answer_set.all.0.user.last_name | title}}
+                                </b>
+                            </a> |
+                            {{question.answer_set.all.0.created_date|date:'d F, Y'}}
+                            {% if question.answer_set.all.0.created_date != question.answer_set.all.0.updated_date %}
+                            (Edited)
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                        {% if not question.answer_set.all.0.is_anonymous %}
+                        <div class="h7 text-muted">{{question.answer_set.all.0.user.bio}}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="card-footer">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="ml-2">
+                        <h4><a href="{% url 'qnA:answer' question.slug %}" class="text-decoration-none">Answer Now</a>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
     {% endfor %}
 </div>
 {% endblock profile %}

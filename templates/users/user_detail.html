@@ -10,7 +10,7 @@
                         src="{% if user.display_img %}{{user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
                 </div>
                 <div class="align-self-center">
-                    <h1 class="crim">{{user.first_name}} {{user.last_name}}</h1>
+                    <h1 class="crim">{{user.first_name | title}} {{user.last_name | title}}</h1>
                     <h6 class="text-muted">{{user.bio}}</h6>
                 </div>
                 <hr>
@@ -54,9 +54,12 @@
             <hr>
             {% block profile %}
             {% if answers %}
-            <h4 class="crim text-center mb-4">{{user.first_name}} {{user.last_name}}'s Pinned Answers</h4>
+            <h4 class="crim text-center mb-4">{{user.first_name | title}} {{user.last_name | title}}'s Pinned Answers
+            </h4>
             <div class="user-profile">
                 {% for answer in answers %}
+
+                {% if not answer.is_anonymous %}
                 <div class="card mb-4">
                     <div class="card-header">
                         <div class="d-flex justify-content-between align-items-center">
@@ -67,10 +70,13 @@
                                 </div>
                                 <div class="ml-2">
                                     <div class="p m-0">
-                                        <b>
-                                            {{answer.question.user.first_name}}
-                                            {{answer.question.user.last_name}}
-                                        </b> |
+                                        <a href="{% url 'users:profile' answer.question.user.slug %}"
+                                            class="text-decoration-none">
+                                            <b>
+                                                {{answer.question.user.first_name | title}}
+                                                {{answer.question.user.last_name | title}}
+                                            </b>
+                                        </a> |
                                         {{answer.question.created_date |date:'d F, Y'}}
                                     </div>
                                     <div class="h7 text-muted">{{answer.question.user.bio}}</div>
@@ -115,10 +121,13 @@
                                         {% if answer.is_anonymous %}
                                         <i>Anonymous</i>
                                         {% else %}
-                                        <b>
-                                            {{answer.user.first_name}}
-                                            {{answer.user.last_name}}
-                                        </b> |
+                                        <a href="{% url 'users:profile' answer.user.slug %}"
+                                            class="text-decoration-none">
+                                            <b>
+                                                {{answer.user.first_name | title}}
+                                                {{answer.user.last_name | title}}
+                                            </b>
+                                        </a> |
                                         {{answer.created_date|date:'d F, Y'}}
                                         {% if answer.created_date != answer.updated_date %}
                                         (Edited)
@@ -131,10 +140,13 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 {% endfor %}
             </div>
             {% else %}
-            <h4 class="crim text-center mb-4">{{user.first_name}} {{user.last_name}} has not pinned any answers.</h4>
+            <h4 class="crim text-center mb-4">{{user.first_name | title}} {{user.last_name | title}} has not pinned any
+                answers.
+            </h4>
             {% endif %}
 
             {% endblock profile %}

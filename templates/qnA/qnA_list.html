@@ -10,9 +10,12 @@
                 <div class="card-body text-center">
                     <img class="rounded-circle text-center" height="100" width="100"
                         src="{% if request.user.display_img %}{{request.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
-                    <div class="h5 mt-2 mb-0"><a href="{% url 'users:profile' user.slug %}"
-                            class="text-decoration-none">{{user.first_name | title }}
-                            {{user.last_name | title}}</a></div>
+                    <div class="h5 mt-2 mb-0">
+                        <a href="{% url 'users:profile' user.slug %}" class="text-decoration-none">
+                            {{user.first_name | title }}
+                            {{user.last_name | title}}
+                        </a>
+                    </div>
                     <div class="h7 text-muted">{{user.bio | title}}</div>
                     <a class="btn btn-outline-danger mt-2" href="{% url 'users:edit' %}" role="button">Edit Profile</a>
                 </div>
