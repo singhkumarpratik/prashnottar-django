@@ -9,7 +9,9 @@ class NotificationListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        notifications = Notification.objects.filter(to_user=self.request.user.pk)
+        notifications = Notification.objects.filter(
+            to_user=self.request.user.pk
+        ).order_by("-created_date")
         context["notifications"] = notifications
         return context
 
@@ -34,18 +36,32 @@ class NotificationDetailView(DetailView):
         print(from_user, question, ans)
 
 
+class NotificationAnswerListView(ListView):
+    model = Notification
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        notifications = Notification.objects.filter(
+            to_user=self.request.user.pk, is_answer=True
+        ).order_by("-created_date")
+        context["notifications"] = notifications
+        return context
+
+
+class NotificationFollowedQuestionsListView(ListView):
+    model = Notification
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        notifications = Notification.objects.filter(
+            to_user=self.request.user.pk, is_followed_question=True
+        ).order_by("-created_date")
+        context["notifications"] = notifications
+        return context
+
+
 def show_notifications(request, notification_id):
     notification = Notification.objects.get(id=notification_id)
     return render(
         request, "notifications/notification.html", {"notification": notification}
     )
-
-
-def mark_as_read(request):
-    if request.user.is_authenticated:
-        if request.is_ajax and request.method == "GET":
-            # pk = request.GET.get("pk")
-            # notification = Notification.objects.get(pk=pk)
-            # notification.is_seen
-            # return JsonResponse({"is_seen": notification.is_seen})
-            pass

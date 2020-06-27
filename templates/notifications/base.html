@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="sticky-top">
+                <h6 class="text-muted">Your Notifications</h6>
+                <hr>
+                <h6 class="mb-3"><a href="{% url 'notifications:notifications_all' %}" class=" text-decoration-none">All
+                        Notifications</a></h6>
+                <h6 class="mb-3"><a href="{% url 'notifications:notifications_ans' %}"
+                        class="text-decoration-none">Answers</a></h6>
+                <h6 class="mb-3"><a href="{% url 'notifications:notifications_followed_questions' %}"
+                        class="text-decoration-none">Followed
+                        Questions</a></h6>
+                <h6 class="mb-3"><a href="#" class="text-decoration-none">Questions Requests</a></h6>
+                <hr>
+                <div class="text-center">
+                    <div class="h7 text-muted">
+                        Made With ❤ By <a href="https://github.com/singhkumarpratik">Pratik</a>
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </div>
+        {% block notification %}{% endblock notification %}
+    </div>
+</div>
+{% endblock content %}
