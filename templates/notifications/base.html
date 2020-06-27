@@ -25,7 +25,13 @@
                 <hr>
             </div>
         </div>
-        {% block notification %}{% endblock notification %}
+        <div class="col-md-9">
+            <div class="text-right">
+                <input type="button" value="Dismiss All" name="dismiss" class="btn btn-danger align-right" />
+                <hr>
+            </div>
+            {% block notification %}{% endblock notification %}
+        </div>
     </div>
 </div>
 {% endblock content %}

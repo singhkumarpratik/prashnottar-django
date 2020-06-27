@@ -19,7 +19,6 @@ class NotificationListView(ListView):
 class NotificationDetailView(DetailView):
     model = Notification
     queryset = Notification.objects.all()
-    # context_object_name = "notification"
 
     def get_context_data(self, **kwargs):
         context = super(NotificationDetailView, self).get_context_data(**kwargs)
@@ -38,6 +37,7 @@ class NotificationDetailView(DetailView):
 
 class NotificationAnswerListView(ListView):
     model = Notification
+    template_name = "notifications/notification_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -50,6 +50,7 @@ class NotificationAnswerListView(ListView):
 
 class NotificationFollowedQuestionsListView(ListView):
     model = Notification
+    template_name = "notifications/notification_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -60,8 +61,15 @@ class NotificationFollowedQuestionsListView(ListView):
         return context
 
 
-def show_notifications(request, notification_id):
-    notification = Notification.objects.get(id=notification_id)
-    return render(
-        request, "notifications/notification.html", {"notification": notification}
-    )
+def dismiss_notification(request, pk=None):
+    if request.user.is_authenticated:
+        try:
+            if pk is None:
+                """dismiss all"""
+                Notification.objects.filter(to_user=request.user.pk).delete()
+                return JsonResponse({"dismiss_all": True, "success": True})
+            else:
+                Notification.objects.get(pk=pk).delete()
+                return JsonResponse({"success": True})
+        except:
+            return JsonResponse({"success": False})

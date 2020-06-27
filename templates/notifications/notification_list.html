@@ -1,10 +1,13 @@
 {% extends "notifications/base.html" %}
 {% load static %}
-
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
+{% endblock head %}
 {% block notification %}
-<div class="col-md-9">
+<div class="animate__animated dismiss-all">
     {% for notification in notifications %}
-    <div class="card mb-2" {% if notification.is_seen %} style="background-color: #F1F2F2;" {% endif %}>
+    <div class="animate__animated card mb-2 dismiss{{notification.pk}}" {% if notification.is_seen %}
+        style="background-color: #F1F2F2;" {% endif %}>
         <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex justify-content-between align-items-center">
@@ -29,37 +32,45 @@
                         </div>
                     </a>
                 </div>
+                <div>
+                    <input type="button" value="Dismiss" name="dismiss" class="btn btn-outline-danger"
+                        data-pk="{{notification.pk}}" />
+                </div>
             </div>
         </div>
     </div>
     {% endfor %}
-    {% if is_paginated %}
-    <div class="d-flex flex-row justify-content-center align-items-center">
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-            <li class="page-item mr-2">
-                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                </a>
-            </li>
-            {% endif %}
-
-            <li class="page-item">
-                <span>Page {{ page_obj.number }} of
-                    {{ page_obj.paginator.num_pages }}
-                </span>
-            </li>
-            {% if page_obj.has_next %}
-            <li class="page-item ml-2">
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </div>
-    {% endif %}
 </div>
+{% if is_paginated %}
+<div class="d-flex flex-row justify-content-center align-items-center">
+    <ul class="pagination">
+        {% if page_obj.has_previous %}
+        <li class="page-item mr-2">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        {% endif %}
+
+        <li class="page-item">
+            <span>Page {{ page_obj.number }} of
+                {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+        {% if page_obj.has_next %}
+        <li class="page-item ml-2">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}
 {% endblock notification %}
+
+{% block scripts %}
+<script src="{% static 'js/dismiss_notifications.js' %}"></script>
+{% endblock scripts %}
