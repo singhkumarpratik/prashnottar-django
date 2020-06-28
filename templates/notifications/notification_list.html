@@ -4,6 +4,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
 {% endblock head %}
 {% block notification %}
+
+{% if notifications %}
 <div class="animate__animated dismiss-all">
     {% for notification in notifications %}
     <div class="animate__animated card mb-2 dismiss{{notification.pk}}" {% if notification.is_seen %}
@@ -41,6 +43,11 @@
     </div>
     {% endfor %}
 </div>
+{% else %}
+<h4 class="text-muted text-center">No Notifications</h4>
+{% endif %}
+
+
 {% if is_paginated %}
 <div class="d-flex flex-row justify-content-center align-items-center">
     <ul class="pagination">

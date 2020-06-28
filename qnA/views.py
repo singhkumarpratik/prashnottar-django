@@ -1,9 +1,9 @@
 import math
 from datetime import datetime
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.http import JsonResponse
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView, FormView, UpdateView, DeleteView
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
@@ -72,6 +72,8 @@ class QuestionDetailView(DetailView):
         is_following = FollowQuestion.objects.filter(
             user=self.request.user.pk, question=self.get_object()
         )
+        is_answered = self.get_object().answer_set.filter(user=self.request.user)
+        context["is_answered"] = is_answered
         context["is_following"] = is_following
         context["related_questions"] = related_questions
         return context
@@ -129,6 +131,43 @@ class AnswerDetailView(DetailView):
         user_answer = question.answer_set.get(user=user_pk)
         context["user_answer"] = user_answer
         return context
+
+
+class AnswerUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = "qnA/qnA.html"
+    model = Question
+    form_class = AnswerForm
+    login_url = "/users/login/"
+
+    def get_object(self, queryset=None):
+        question = super().get_object(queryset=queryset)
+        ans = question.answer_set.get(user=self.request.user)
+        return ans
+
+    def get_success_url(self, **kwargs):
+        print(self.object.question.slug)
+        return reverse_lazy(
+            "qnA:answer_detail",
+            args=(
+                self.object.question.slug,
+                self.object.user.slug,
+                self.object.question.pk,
+                self.object.user.pk,
+            ),
+        )
+
+
+class AnswerDeleteView(LoginRequiredMixin, DeleteView):
+    model = Question
+
+    def get_object(self, queryset=None):
+        question = super().get_object(queryset=queryset)
+        ans = question.answer_set.get(user=self.request.user)
+        return ans
+
+    def get_success_url(self, **kwargs):
+        print(self.object.question.slug)
+        return reverse_lazy("qnA:question_detail", args=(self.object.question.slug,))
 
 
 def follow_question(request, question_slug):

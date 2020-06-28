@@ -1,0 +1,15 @@
+{% extends "users/login_and_register.html" %}
+{% block img %}
+{% endblock img %}
+{% block form %}
+<form method="post">
+    {% csrf_token %}
+    <h5 class="text-muted">Are you sure you want to delete your Answer?</h5>
+    {% block btn %}
+    <input type="submit" value="Yes" class="btn btn-danger">
+    <a class="btn btn-light" href="{% url 'qnA:question_detail' object.question.slug %}">No</a>
+    {% endblock btn %}
+</form>
+{% endblock form %}
+{% block msg %}{% endblock msg %}
+{% block footer %} {% endblock footer %}

@@ -29,9 +29,20 @@
         <div class="col-md-9">
             <div class="question">
                 <h3 class="crim">{{question}}</h3>
-                <h6><a href="{% url 'qnA:answer' question.slug %}" class="badge badge-danger"><img
+                <h6>
+                    {% if not is_answered %}
+                    <a href="{% url 'qnA:answer' question.slug %}" class="badge badge-danger"><img
                             src="{% static 'imgs/qnA/pencil-square.svg' %}" alt="Answer">
-                        Answer</a> |
+                        Answer</a>
+                    {% else %}
+                    <a href="{% url 'qnA:edit' question.slug %}" class="badge badge-primary"><img
+                            src="{% static 'imgs/qnA/pencil-square.svg' %}" alt="Edit">
+                        Edit Answer</a> |
+                    <a href="{% url 'qnA:delete' question.slug %}" class="badge badge-dark"><img
+                            src="{% static 'imgs/qnA/pencil-square.svg' %}" alt="Delete">
+                        Delete Answer</a>
+                    {% endif %}
+                    |
                     <b>{{question.answer_set.count}} Answers</b> |
 
                     {% if question.user != user %}
@@ -44,7 +55,6 @@
                     {% endif %}
                     {% endif %}
                 </h6>
-
             </div>
             <hr>
             {% if question.answer_set.count == 0 %}
