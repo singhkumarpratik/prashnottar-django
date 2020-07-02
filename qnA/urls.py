@@ -9,6 +9,16 @@ urlpatterns = [
         views.QuestionDetailView.as_view(),
         name="question_detail",
     ),
+    path(
+        "question/request/<slug:slug>/",
+        views.RequestAnswerListView.as_view(),
+        name="answer_request",
+    ),
+    path(
+        "question/request/<int:question_pk>/<int:user_pk>",
+        views.request_answer,
+        name="answer_request_ajax",
+    ),
     # passing slugs for SEO purpose
     path(
         "question/<slug:slug>/answer/<slug:user_slug>/<int:question_pk>/<int:user_pk>",

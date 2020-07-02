@@ -23,16 +23,21 @@
                         <img class="rounded-circle" width="45" height="45" src="{% static 'imgs/no_display_img.jpg' %}">
                         {% endif %}
                     </div>
+                    {% if notification.question %}
                     <a href="{% url 'notifications:notification_detail' notification.pk %}"
                         class="text-decoration-none read">
-                        <div class="ml-2">
-                            <div class="p m-0">
-                                <b>
-                                    {{notification.msg}}
-                                </b>
+                        {% else %}
+                        <a href="{% url 'users:profile' notification.from_user.slug %}"
+                            class="text-decoration-none read">
+                            {% endif %}
+                            <div class="ml-2">
+                                <div class="p m-0">
+                                    <b>
+                                        {{notification.msg}}
+                                    </b>
+                                </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
                 </div>
                 <div>
                     <input type="button" value="Dismiss" name="dismiss" class="btn btn-outline-danger"

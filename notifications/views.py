@@ -26,8 +26,16 @@ class NotificationDetailView(DetailView):
         obj.is_seen = True
         obj.save()
         from_user = obj.from_user
+        to_user = obj.to_user
         question = obj.question
-        ans = question.answer_set.get(user=from_user.pk)
+        ans = question.answer_set.filter(user=from_user.pk)
+        is_requested_question = Notification.objects.filter(
+            from_user=from_user,
+            to_user=to_user,
+            question=question,
+            is_requested_question=True,
+        )
+        context["is_requested_question"] = is_requested_question
         context["from_user"] = from_user
         context["question"] = question
         context["ans"] = ans

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex flex-row justify-content-center">
+                <div class="align-self-center">
+                    <h5 class="text-muted">Request Answers:</h5>
+                    <h2 class="crim">{{question}}</h2>
+                </div>
+                <hr>
+            </div>
+            <hr>
+            <div class="search text-center">
+                TODO: searchbar
+            </div>
+            <hr>
+            {% block profile %}
+
+            {% if suggested_users %}
+            <h5 class="text-muted mb-3">Suggested Users</h5>
+            {% for suggested_user,is_requested_question in suggested_users.items %}
+
+            {% if suggested_user != request.user %}
+            <div class="card mb-2">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="mr-2">
+                                <img class="rounded-circle" width="45" height="45"
+                                    src="{% if suggested_user.display_img %}{{suggested_user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                            </div>
+                            <div class="ml-2">
+                                <div class="p m-0">
+                                    <b>
+                                        <a href="#">
+                                            {{suggested_user.first_name}}
+                                            {{suggested_user.last_name}}
+                                        </a>
+                                    </b>
+                                </div>
+                                <div class="h7 text-muted">{{suggested_user.bio}}</div>
+                            </div>
+                        </div>
+                        <div>
+
+                            {% if is_requested_question %}
+                            <input type="button" value="Request Sent" name="request"
+                                class="btn btn-outline-danger request{{suggested_user.pk}}{{question.pk}}"
+                                data-pk="{{suggested_user.pk}}" data-qpk="{{question.pk}}" disabled />
+                            {% else %}
+                            <input type="button" value="Request" name="request"
+                                class="btn btn-outline-danger request{{suggested_user.pk}}{{question.pk}}"
+                                data-pk="{{suggested_user.pk}}" data-qpk="{{question.pk}}" />
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+
+            {% endblock profile %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block scripts %}
+<script src="{% static 'js/request_answer.js' %}"></script>
+{% endblock scripts %}

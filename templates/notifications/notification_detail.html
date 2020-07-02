@@ -42,6 +42,7 @@
         <div class=" card-footer">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex justify-content-between align-items-center">
+                    {% if not is_requested_question %}
                     <div class="mr-2">
                         <img class="rounded-circle" width="45" height="45"
                             src="{% if from_user.display_img %}{{from_user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
@@ -65,6 +66,9 @@
                         </div>
                         <div class="h7 text-muted">{{ans.user.bio}}</div>
                     </div>
+                    {% else %}
+                    <h4><a href="{% url 'qnA:answer' question.slug %}" class="text-decoration-none">Answer Now</a></h4>
+                    {% endif %}
                 </div>
             </div>
         </div>

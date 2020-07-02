@@ -13,6 +13,8 @@ from comments.models import MyComment
 from .models import *
 from .forms import *
 from .get_topics import *
+from users.models import User
+from notifications.models import Notification
 
 
 class QnaListView(ListView):
@@ -168,6 +170,63 @@ class AnswerDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self, **kwargs):
         print(self.object.question.slug)
         return reverse_lazy("qnA:question_detail", args=(self.object.question.slug,))
+
+
+class RequestAnswerListView(ListView):
+    model = Question
+    template_name = "qnA/answer_request.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        question_slug = self.kwargs["slug"]
+        question = Question.objects.get(slug=question_slug)
+        answer_users = []
+        for answer in question.answer_set.all():
+            answer_users.append(answer.user)
+        question_topics = question.topics.all()
+        suggested_users = {}
+        for topic in question_topics:
+            """find similar questions"""
+            matches = Question.objects.filter(title__icontains=topic).exclude(
+                slug=question_slug
+            )[:10]
+            for match in matches:
+                """for each similar questions, get those question's answers's users and add them to suggested_user list"""
+                answers = match.answer_set.all().order_by("-vote_score")
+                for answer in answers:
+                    if answer.user not in answer_users and answer.user != question.user:
+                        is_requested_question = Notification.objects.filter(
+                            from_user=self.request.user.pk,
+                            to_user=answer.user.pk,
+                            question=question,
+                            is_requested_question=True,
+                        )
+                        """checking if the request.user had already requested the answer"""
+                        is_requested_question = True if is_requested_question else False
+                        suggested_users[answer.user] = is_requested_question
+        context["question"] = question
+        context["suggested_users"] = suggested_users
+        return context
+
+
+def request_answer(request, question_pk, user_pk):
+    if request.user.is_authenticated:
+        from_user = request.user
+        to_user = User.objects.get(pk=user_pk)
+        try:
+            question = Question.objects.get(pk=question_pk)
+            msg = f"{from_user.first_name} {from_user.last_name} requested you to answer the question: {question}"
+            Notification.objects.create(
+                from_user=from_user,
+                to_user=to_user,
+                msg=msg,
+                question=question,
+                is_requested_question=True,
+            )
+            return JsonResponse({"success": True})
+        except:
+            return JsonResponse({"success": False})
+    return redirect("users:login")
 
 
 def follow_question(request, question_slug):
