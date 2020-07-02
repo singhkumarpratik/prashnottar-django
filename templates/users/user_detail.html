@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% block title %}{{user.first_name | title}} {{user.last_name | title}}'s Profile{% endblock title %}
 {% block content %}
 <div class="container">
     <div class="row">

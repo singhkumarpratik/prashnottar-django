@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
   {% block head %}{% endblock head %}
-  <title>{% block title %}{% endblock %}</title>
+  <title>{% block title %}{% endblock title %}</title>
 </head>
 
 <body style="background-color: #F1F2F2;">
@@ -37,7 +37,7 @@
         {% if user.is_authenticated %}
         <div class="item">
           <a class="mr-4 btn btn-light " href="{% url 'notifications:notifications_all' %}">
-            <span class="notify-badge">{% unread_notification user %}</span>
+            <span class="notify-badge">{% unread_notification request.user %}</span>
             Notifications
           </a>
         </div>

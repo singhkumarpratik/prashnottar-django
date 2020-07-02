@@ -3,8 +3,8 @@
 {% block head %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" />
 {% endblock head %}
+{% block title %}Notifications{% endblock title %}
 {% block notification %}
-
 {% if notifications %}
 <div class="animate__animated dismiss-all">
     {% for notification in notifications %}

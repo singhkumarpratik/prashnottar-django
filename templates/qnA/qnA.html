@@ -1,7 +1,13 @@
 {% extends "base.html" %}
 {% load static %}
+{% block title %}
+{% if question %}
+Answer {{question}}
+{% else %}
+Ask Question
+{% endif %}
+{% endblock title %}
 {% block content %}
-
 <div class="container">
     <div class="row">
         <div class="col-md-3">

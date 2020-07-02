@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load comments %}
 {% load comments_xtd %}
+{% block title %}{{question.title}}{% endblock title %}
 {% block content %}
 <div class="container">
     <div class="row">
@@ -30,6 +31,7 @@
             <div class="question">
                 <h3 class="crim">{{question}}</h3>
                 <h6>
+                    <b>{{question.answer_set.count}} Answers</b> |
                     {% if not is_answered %}
                     <a href="{% url 'qnA:answer' question.slug %}" class="badge badge-danger"><img
                             src="{% static 'imgs/qnA/pencil-square.svg' %}" alt="Answer">
@@ -43,8 +45,6 @@
                         Delete Answer</a>
                     {% endif %}
                     |
-                    <b>{{question.answer_set.count}} Answers</b> |
-
                     {% if question.user != user %}
                     {% if is_following %}
                     <a id="follow" href="{% url 'qnA:follow-question' question.slug %}" class="badge badge-info">
@@ -52,8 +52,10 @@
                     {% else %}
                     <a id="follow" href="{% url 'qnA:follow-question' question.slug %}" class="badge badge-danger">
                         Follow Question</a>
+                    {% endif %} |
                     {% endif %}
-                    {% endif %}
+                    <a href="{% url 'qnA:answer_request' question.slug %}" class="badge badge-primary">
+                        Request Answer</a>
                 </h6>
             </div>
             <hr>
