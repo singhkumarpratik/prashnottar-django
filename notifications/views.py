@@ -1,11 +1,14 @@
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from .models import Notification
 
 
-class NotificationListView(ListView):
+class NotificationListView(LoginRequiredMixin, ListView):
     model = Notification
+    login_url = "/users/login/"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -16,8 +19,9 @@ class NotificationListView(ListView):
         return context
 
 
-class NotificationDetailView(DetailView):
+class NotificationDetailView(LoginRequiredMixin, DetailView):
     model = Notification
+    login_url = "/users/login/"
     queryset = Notification.objects.all()
 
     def get_context_data(self, **kwargs):
@@ -43,8 +47,9 @@ class NotificationDetailView(DetailView):
         print(from_user, question, ans)
 
 
-class NotificationAnswerListView(ListView):
+class NotificationAnswerListView(LoginRequiredMixin, ListView):
     model = Notification
+    login_url = "/users/login/"
     template_name = "notifications/notification_list.html"
 
     def get_context_data(self, **kwargs):
@@ -56,8 +61,9 @@ class NotificationAnswerListView(ListView):
         return context
 
 
-class NotificationFollowedQuestionsListView(ListView):
+class NotificationFollowedQuestionsListView(LoginRequiredMixin, ListView):
     model = Notification
+    login_url = "/users/login/"
     template_name = "notifications/notification_list.html"
 
     def get_context_data(self, **kwargs):

@@ -34,7 +34,7 @@
           </li>
         </ul>
         {% block buttons %}
-        {% if user.is_authenticated %}
+        {% if request.user.is_authenticated %}
         <div class="item">
           <a class="mr-4 btn btn-light " href="{% url 'notifications:notifications_all' %}">
             <span class="notify-badge">{% unread_notification request.user %}</span>

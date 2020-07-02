@@ -2,13 +2,14 @@ import math
 from datetime import datetime
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.views.generic import ListView, DetailView, FormView, UpdateView, DeleteView
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from comments.models import MyComment
 from .models import *
 from .forms import *
@@ -74,8 +75,12 @@ class QuestionDetailView(DetailView):
         is_following = FollowQuestion.objects.filter(
             user=self.request.user.pk, question=self.get_object()
         )
-        is_answered = self.get_object().answer_set.filter(user=self.request.user)
-        context["is_answered"] = is_answered
+        try:
+            """this is in try/except block otherwise it'll throw error when a user who isn't logged in visits a question detail page"""
+            is_answered = self.get_object().answer_set.filter(user=self.request.user)
+            context["is_answered"] = is_answered
+        except:
+            pass
         context["is_following"] = is_following
         context["related_questions"] = related_questions
         return context
@@ -120,6 +125,17 @@ class AnswerView(LoginRequiredMixin, FormView):
         context["question"] = question
         return context
 
+    def dispatch(self, request, *args, **kwargs):
+        """redirect to edit answer url if answer of the user already exists"""
+        question_slug = self.kwargs.get("slug")
+        question = Question.objects.get(slug=question_slug)
+        try:
+            Answer.objects.get(question=question, user=request.user)
+            return redirect(reverse("qnA:edit", kwargs={"slug": question_slug}))
+        except:
+            pass
+        return super(AnswerView, self).dispatch(request, *args, **kwargs)
+
 
 class AnswerDetailView(DetailView):
     queryset = Question.objects.all()
@@ -143,8 +159,11 @@ class AnswerUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         question = super().get_object(queryset=queryset)
-        ans = question.answer_set.get(user=self.request.user)
-        return ans
+        try:
+            ans = question.answer_set.get(user=self.request.user)
+            return ans
+        except:
+            raise Http404
 
     def get_success_url(self, **kwargs):
         print(self.object.question.slug)
@@ -161,20 +180,25 @@ class AnswerUpdateView(LoginRequiredMixin, UpdateView):
 
 class AnswerDeleteView(LoginRequiredMixin, DeleteView):
     model = Question
+    login_url = "/users/login/"
 
     def get_object(self, queryset=None):
         question = super().get_object(queryset=queryset)
-        ans = question.answer_set.get(user=self.request.user)
-        return ans
+        try:
+            ans = question.answer_set.get(user=self.request.user)
+            return ans
+        except:
+            raise Http404
 
     def get_success_url(self, **kwargs):
         print(self.object.question.slug)
         return reverse_lazy("qnA:question_detail", args=(self.object.question.slug,))
 
 
-class RequestAnswerListView(ListView):
+class RequestAnswerListView(LoginRequiredMixin, ListView):
     model = Question
     template_name = "qnA/answer_request.html"
+    login_url = "/users/login/"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -215,15 +239,25 @@ def request_answer(request, question_pk, user_pk):
         to_user = User.objects.get(pk=user_pk)
         try:
             question = Question.objects.get(pk=question_pk)
-            msg = f"{from_user.first_name} {from_user.last_name} requested you to answer the question: {question}"
-            Notification.objects.create(
-                from_user=from_user,
-                to_user=to_user,
-                msg=msg,
-                question=question,
-                is_requested_question=True,
-            )
-            return JsonResponse({"success": True})
+            try:
+                """checking if notification is already sent"""
+                Notification.objects.get(
+                    from_user=from_user,
+                    to_user=to_user,
+                    question=question,
+                    is_requested_question=True,
+                )
+                return redirect("qnA:home")
+            except:
+                msg = f"{from_user.first_name} {from_user.last_name} requested you to answer the question: {question}"
+                Notification.objects.create(
+                    from_user=from_user,
+                    to_user=to_user,
+                    msg=msg,
+                    question=question,
+                    is_requested_question=True,
+                )
+                return JsonResponse({"success": True})
         except:
             return JsonResponse({"success": False})
     return redirect("users:login")
@@ -240,7 +274,6 @@ def follow_question(request, question_slug):
             this check is done to prevent them from getting notification twice.
             """
             try:
-                # FollowQuestion.objects.get(question=question, user=user)
                 FollowQuestion.objects.get(question=question, user=user).delete()
                 is_following = False
             except:

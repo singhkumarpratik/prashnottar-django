@@ -2,8 +2,9 @@ from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from django.views.generic import FormView, UpdateView, DetailView, ListView
 from django.contrib.auth import authenticate, login, logout
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from .forms import RegisterForm, LoginForm, ProfileForm
 from .models import User, Follow
 from .mixins import LogoutRequiredMixin
@@ -145,6 +146,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return self.request.user
 
 
+@login_required(login_url="/users/login/")
 def profile_answer_pin(request, slug, is_pin, answer_pk):
     if request.user.is_authenticated:
         if request.user.slug == slug:
@@ -164,7 +166,7 @@ def profile_answer_pin(request, slug, is_pin, answer_pk):
                 reverse("users:profile_answers", kwargs={"slug": user.slug})
             )
         else:
-            return redirect("qnA:home")
+            raise Http404
 
 
 def follow_unfollow_users(request, slug):
