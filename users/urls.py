@@ -31,8 +31,10 @@ urlpatterns = [
         name="following",
     ),
     path("edit/", views.ProfileUpdateView.as_view(), name="edit"),
+    path("edit/workplace/", views.WorkPlaceUpdateView.as_view(), name="workplace_edit"),
+    path("edit/education/", views.EducationUpdateView.as_view(), name="education_edit"),
     path(
-        "follow_unfollow/<slug:slug>",
+        "follow_toggle/<slug:slug>",
         views.follow_unfollow_users,
         name="follow_unfollow",
     ),

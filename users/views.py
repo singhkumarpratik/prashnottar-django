@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
-from .forms import RegisterForm, LoginForm, ProfileForm
-from .models import User, Follow
+from .forms import *
+from .models import *
 from .mixins import LogoutRequiredMixin
 
 
@@ -144,6 +144,37 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["is_profile_update"] = True
+        return context
+
+
+class WorkPlaceUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = "users/edit.html"
+    model = WorkPlace
+    form_class = WorkPlaceForm
+    login_url = "/users/login/"
+
+    def get_object(self, queryset=None):
+        return self.model.objects.get(pk=self.request.user.pk)
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy("users:profile", args=(self.request.user.slug,),)
+
+
+class EducationUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = "users/edit.html"
+    model = Education
+    form_class = EducationForm
+    login_url = "/users/login/"
+
+    def get_object(self, queryset=None):
+        return self.model.objects.get(pk=self.request.user.pk)
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy("users:profile", args=(self.request.user.slug,),)
 
 
 @login_required(login_url="/users/login/")

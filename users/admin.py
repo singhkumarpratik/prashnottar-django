@@ -15,9 +15,9 @@ class CustomUserAdmin(UserAdmin):
         "is_superuser",
         "slug",
     )
-    fieldsets = UserAdmin.fieldsets + (("Bio", {"fields": ("bio",),}),)
+    fieldsets = UserAdmin.fieldsets + (("Bio", {"fields": ("bio", "location"),}),)
 
 
-@admin.register(models.Follow)
+@admin.register(models.Follow, models.Education, models.WorkPlace)
 class CustomFollowAdmin(admin.ModelAdmin):
     pass

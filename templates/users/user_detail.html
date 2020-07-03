@@ -152,8 +152,53 @@
 
             {% endblock profile %}
         </div>
-        <div class="col-md-3 sticky-top">
-            hi
+        <div class="col-md-3">
+            <div class="d-flex justify-content-between">
+                <h6 class="text-muted">Credentials & Highlights</h6>
+            </div>
+            <hr class="my-2">
+            {% if user.workplace_set.all %}
+            <div class="workplace mb-2">
+                <span><img src="{% static 'imgs/qnA/briefcase.svg' %}" alt="Works at"></span>
+                <span>{{user.workplace_set.all.0.company_name}}</span>
+                <span class="text-muted">
+                    {% if user.workplace_set.all.0.is_currently_working %}
+                    ({{user.workplace_set.all.0.start_year}} - Present)
+                    {% else %}
+                    ({{user.workplace_set.all.0.start_year}} - {{user.workplace_set.all.0.end_year}})
+                    {% endif %}
+                </span>
+                {% if user == request.user %}
+                <span>
+                    <a href="{% url 'users:workplace_edit' %}" class="badge badge-danger align-self-center">Edit</a>
+                </span>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% if user.education_set.all %}
+            <div class="education mb-2">
+                <span><img src="{% static 'imgs/qnA/building.svg' %}" alt="Works at"></span>
+                <span>{{user.education_set.all.0.school_name}}</span>
+                <span class="text-muted">
+                    {% if user.education_set.all.0.is_currently_studying %}
+                    ({{user.education_set.all.0.start_year}} - Present)
+                    {% else %}
+                    ({{user.education_set.all.0.start_year}} - {{user.education_set.all.0.end_year}})
+                    {% endif %}
+                </span>
+                {% if user == request.user %}
+                <span>
+                    <a href="{% url 'users:education_edit' %}" class="badge badge-danger align-self-center">Edit</a>
+                </span>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% if user.location %}
+            <div class="location">
+                <span><img src="{% static 'imgs/qnA/map.svg' %}" alt="Lives at"></span>
+                <span>{{user.location}}</span>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>

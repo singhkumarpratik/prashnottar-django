@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django import forms
-from .models import User
+from .models import User, WorkPlace, Education
 
 
 class LoginForm(forms.Form):
@@ -108,6 +108,7 @@ class ProfileForm(forms.ModelForm):
             "first_name",
             "last_name",
             "bio",
+            "location",
             "display_img",
         )
         widgets = {
@@ -117,7 +118,56 @@ class ProfileForm(forms.ModelForm):
             "last_name": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Enter Last Name"}
             ),
+            "location": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter Last Name"}
+            ),
             "bio": forms.Textarea(
                 attrs={"class": "form-control", "placeholder": "Enter Bio", "rows": 3,}
             ),
+        }
+
+
+class WorkPlaceForm(forms.ModelForm):
+    class Meta:
+        model = WorkPlace
+        fields = (
+            "company_name",
+            "position",
+            "start_year",
+            "end_year",
+            "is_currently_working",
+        )
+        widgets = {
+            "company_name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter Company Name"}
+            ),
+            "position": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter Your Position"}
+            ),
+            "start_year": forms.Select(attrs={"class": "form-control",}),
+            "end_year": forms.Select(attrs={"class": "form-control",}),
+        }
+        labels = {
+            "is_currently_working": "Currently Working",
+        }
+
+
+class EducationForm(forms.ModelForm):
+    class Meta:
+        model = Education
+        fields = (
+            "school_name",
+            "start_year",
+            "end_year",
+            "is_currently_studying",
+        )
+        widgets = {
+            "school_name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter Company Name"}
+            ),
+            "start_year": forms.Select(attrs={"class": "form-control",}),
+            "end_year": forms.Select(attrs={"class": "form-control",}),
+        }
+        labels = {
+            "is_currently_studying": "Currently Studying",
         }

@@ -1,18 +1,30 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Edit Profile{% endblock title %}
+{% block title %}
+{% if is_profile_update %}
+Edit Profile
+{% else %}
+Edit Credentials and Highlights
+{% endif %}
+{% endblock title %}
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-9 mt-5">
             <div class="card gedf-card">
                 <div class="card-body text-center">
+                    {% if is_profile_update %}
                     <img class="rounded-circle" height="100" width="100"
                         src="{% if request.user.display_img %}{{request.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                    {% endif %}
                     <form action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{form.as_p}}
+                        {% if is_profile_update %}
                         <button class="btn btn-lg btn-danger btn-block">Update Profile</button>
+                        {% else %}
+                        <button class="btn btn-lg btn-danger btn-block">Update WorkPlace Details</button>
+                        {% endif %}
                     </form>
                     </p>
                 </div>

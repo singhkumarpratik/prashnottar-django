@@ -1,4 +1,5 @@
 {% extends "users/user_detail.html" %}
+{% load is_following %}
 {% load static %}
 {% block profile %}
 <div class="user-profile">
@@ -24,6 +25,24 @@
                         </div>
                         <div class="h7 text-muted">{{follower.from_user.bio}}</div>
                     </div>
+                </div>
+                <div>
+                    {% is_following request.user.pk follower.from_user.pk as is_following %}
+                    {% if follower.from_user.pk != request.user.pk %}
+                    {% if is_following %}
+                    <input type="button" value="Unfollow" name="follow_list"
+                        class="btn btn-outline-danger follow follow{{follower.from_user.slug}}"
+                        data-to-user="{{follower.from_user.slug}}" />
+                    {% else %}
+                    <input type="button" value="Follow" name="follow_list"
+                        class="btn btn-danger follow follow{{follower.from_user.slug}}"
+                        data-to-user="{{follower.from_user.slug}}" />
+                    {% endif %}
+
+                    {% else %}
+                    <a class="btn btn-outline-danger" href="{% url 'users:profile' follower.from_user.slug %}"
+                        role="button" id="follow">View Your Profile</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

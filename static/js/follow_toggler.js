@@ -38,3 +38,35 @@ $("#follow").click(function (e) {
         }
     });
 });
+$('input[name="follow_list"]').click(function (e) {
+    e.preventDefault();
+    var user_slug = $(this).attr("data-to-user");
+    console.log(user_slug);
+    var href = window.location.origin + "/users/follow_toggle/" + user_slug;
+    $.ajax({
+        url: href,
+        success: function (response) {
+            if (response["is_following"]) {
+                console.log("first if");
+                $(".follow" + user_slug).removeClass('btn-danger').addClass('btn-outline-danger');
+                $(".follow" + user_slug).attr("value", "Unfollow");
+            }
+            else {
+                if (!(response["is_following"])) {
+                    if (response["is_user_follow"]) {
+                        console.log("second if");
+                        $(".follow" + user_slug).removeClass('btn-outline-danger').addClass('btn-danger');
+                        $(".follow" + user_slug).attr("value", "Follow");
+                    }
+                    else {
+                        window.location.href = '/users/login/';
+                    }
+                }
+
+            }
+        },
+        error: function (response) {
+            console.log(response);
+        }
+    });
+});

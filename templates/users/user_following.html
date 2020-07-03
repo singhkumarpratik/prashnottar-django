@@ -26,6 +26,16 @@
                         <div class="h7 text-muted">{{following.to_user.bio}}</div>
                     </div>
                 </div>
+                <div>
+                    {% if following.to_user.pk != request.user.pk %}
+                    <input type="button" value="Unfollow" name="follow_list"
+                        class="btn btn-outline-danger follow follow{{following.to_user.slug}}"
+                        data-to-user="{{following.to_user.slug}}" />
+                    {% else %}
+                    <a class="btn btn-outline-danger" href="{% url 'users:profile' following.to_user.slug %}"
+                        role="button" id="follow">View Your Profile</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
     </div>
