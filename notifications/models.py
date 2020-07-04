@@ -13,6 +13,10 @@ class Notification(models.Model):
     is_answer = models.BooleanField(default=False)
     is_followed_question = models.BooleanField(default=False)
     is_requested_question = models.BooleanField(default=False)
+    """ For sending notification to users who follow a user when the user asks question """
+    is_following_user_questions = models.BooleanField(default=False)
+    """ For sending notification to users who follow a user when the user answers question """
+    is_following_user_answers = models.BooleanField(default=False)
     from_user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="notification_from_people",
     )

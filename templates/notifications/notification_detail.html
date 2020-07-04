@@ -14,9 +14,9 @@
                     <div class="ml-2">
                         <div class="p m-0">
                             <b>
-                                <a href="{% url 'users:profile' question.user.slug %}">
-                                    {{question.user.first_name}}
-                                    {{question.user.last_name}}
+                                <a href="{% url 'users:profile' question.user.slug %}" class="text-decoration-none">
+                                    {{question.user.first_name | title}}
+                                    {{question.user.last_name | title}}
                                 </a>
                             </b> |
                             {{question.created_date |date:'d F, Y'}}
@@ -27,13 +27,14 @@
             </div>
         </div>
         <div class="card-body">
-            <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank" class="card-link">
+            <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank"
+                class="card-link text-decoration-none">
                 <b>
                     <h4 class="card-title crim">{{question}}</h4>
                 </b>
             </a>
             <a href="{% url 'qnA:question_detail' question.slug %}" target="_blank"
-                style="text-decoration: none; color:black;">
+                style="text-decoration: none; color:black;" class="text-decoration-none">
                 <div class="ans">
                     {{ans.ans | safe | truncatewords_html:60}}
                 </div>
@@ -42,10 +43,12 @@
         <div class=" card-footer">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex justify-content-between align-items-center">
-                    {% if not is_requested_question %}
+                    {% if is_following_user_questions %}
+                    <h4><a href="{% url 'qnA:answer' question.slug %}" class="text-decoration-none">Answer Now</a></h4>
+                    {% elif not is_requested_question or is_following_user_answers %}
                     <div class="mr-2">
                         <img class="rounded-circle" width="45" height="45"
-                            src="{% if from_user.display_img %}{{from_user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                            src="{% if ans.user.display_img %}{{ans.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
                     </div>
                     <div class="ml-2">
                         <div class="p m-0">
@@ -53,9 +56,9 @@
                             <i>Anonymous</i>
                             {% else %}
                             <b>
-                                <a href="{% url 'users:profile' ans.user.slug %}">
-                                    {{ans.user.first_name}}
-                                    {{ans.user.last_name}}
+                                <a href="{% url 'users:profile' ans.user.slug %}" class="text-decoration-none">
+                                    {{ans.user.first_name | title}}
+                                    {{ans.user.last_name | title}}
                                 </a>
                             </b> |
                             {{ans.created_date|date:'d F, Y'}}

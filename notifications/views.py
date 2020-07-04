@@ -32,17 +32,34 @@ class NotificationDetailView(LoginRequiredMixin, DetailView):
         from_user = obj.from_user
         to_user = obj.to_user
         question = obj.question
-        ans = question.answer_set.filter(user=from_user.pk)
+        try:
+            ans = question.answer_set.filter(user=from_user.pk)[0]
+            context["ans"] = ans
+        except:
+            pass
         is_requested_question = Notification.objects.filter(
             from_user=from_user,
             to_user=to_user,
             question=question,
             is_requested_question=True,
         )
+        is_following_user_questions = Notification.objects.filter(
+            from_user=from_user,
+            to_user=to_user,
+            question=question,
+            is_following_user_questions=True,
+        )
+        is_following_user_answers = Notification.objects.filter(
+            from_user=from_user,
+            to_user=to_user,
+            question=question,
+            is_following_user_answers=True,
+        )
         context["is_requested_question"] = is_requested_question
+        context["is_following_user_answers"] = is_following_user_answers
+        context["is_following_user_questions"] = is_following_user_questions
         context["from_user"] = from_user
         context["question"] = question
-        context["ans"] = ans
         return context
         print(from_user, question, ans)
 

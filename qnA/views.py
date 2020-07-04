@@ -14,7 +14,7 @@ from comments.models import MyComment
 from .models import *
 from .forms import *
 from .get_topics import *
-from users.models import User
+from users.models import User, Follow
 from notifications.models import Notification
 
 
@@ -101,6 +101,16 @@ class AskQuestionView(LoginRequiredMixin, FormView):
             if not Topic.objects.filter(topic=topic).exists():
                 Topic.objects.create(topic=topic)
             question.topics.add(Topic.objects.get(topic=topic))
+        if not question.is_anonymous:
+            followers = Follow.objects.filter(to_user=self.request.user)
+            for follower in followers:
+                Notification.objects.create(
+                    from_user=self.request.user,
+                    to_user=follower.from_user,
+                    msg=f"{self.request.user.first_name} {self.request.user.last_name} asked a question: {question.title}",
+                    question=question,
+                    is_following_user_questions=True,
+                )
         return redirect(reverse("qnA:question_detail", kwargs={"slug": question.slug}))
 
 
@@ -116,6 +126,18 @@ class AnswerView(LoginRequiredMixin, FormView):
         answer.user = self.request.user
         answer.question = question
         answer.save()
+        print(question.user)
+        if not answer.is_anonymous:
+            followers = Follow.objects.filter(to_user=self.request.user)
+            for follower in followers:
+                if follower.from_user != question.user:
+                    Notification.objects.create(
+                        from_user=self.request.user,
+                        to_user=follower.from_user,
+                        msg=f"{self.request.user.first_name} {self.request.user.last_name} answered a question: {question.title}",
+                        question=question,
+                        is_following_user_answers=True,
+                    )
         return redirect(reverse("qnA:question_detail", kwargs={"slug": question_slug}))
 
     def get_context_data(self, **kwargs):
