@@ -2,6 +2,16 @@
 {% load static %}
 {% block title %}Home{% endblock title %}
 {% block content %}
+{% if messages %}
+{% for message in messages %}
+<div class="text-center alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>Uh, oh!</strong> {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% endif %}
 <div class="container">
     <div class="row">
         <div class="col-md-3">

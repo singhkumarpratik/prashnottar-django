@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .forms import *
 from .models import *
 from .mixins import LogoutRequiredMixin
@@ -197,7 +198,9 @@ def profile_answer_pin(request, slug, is_pin, answer_pk):
                 reverse("users:profile_answers", kwargs={"slug": user.slug})
             )
         else:
-            raise Http404
+            messages.add_message(request, messages.ERROR, "You visited an Invalid URL.")
+            # raise Http404
+            return redirect("qnA:home")
 
 
 def follow_unfollow_users(request, slug):
