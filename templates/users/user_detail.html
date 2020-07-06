@@ -160,7 +160,7 @@
             <div class="workplace mb-2">
                 {% if user.workplace_set.all %}
                 <span><img src="{% static 'imgs/qnA/briefcase.svg' %}" alt="Works at"></span>
-                <span>{{user.workplace_set.all.0.company_name}}</span>
+                <span>{{user.workplace_set.all.0.position}} at {{user.workplace_set.all.0.company_name}}</span>
                 <span class="text-muted">
                     {% if user.workplace_set.all.0.is_currently_working %}
                     ({{user.workplace_set.all.0.start_year}} - Present)
@@ -170,7 +170,8 @@
                 </span>
                 {% if user == request.user %}
                 <span>
-                    <a href="{% url 'users:workplace_edit' %}" class="badge badge-danger align-self-center">Edit</a>
+                    <a href="{% url 'users:workplace_edit' %}" class="badge badge-info align-self-center">Edit</a>
+                    <a href="{% url 'users:workplace_delete' %}" class="badge badge-danger align-self-center">Remove</a>
                 </span>
                 {% endif %}
                 {% elif user == request.user %}
@@ -194,7 +195,8 @@
                 </span>
                 {% if user == request.user %}
                 <span>
-                    <a href="{% url 'users:education_edit' %}" class="badge badge-danger align-self-center">Edit</a>
+                    <a href="{% url 'users:education_edit' %}" class="badge badge-info align-self-center">Edit</a>
+                    <a href="{% url 'users:education_delete' %}" class="badge badge-danger align-self-center">Remove</a>
                 </span>
                 {% endif %}
                 {% elif user == request.user %}
@@ -211,7 +213,8 @@
                 <span>{{user.location}}</span>
                 {% if user == request.user %}
                 <span>
-                    <a href="{% url 'users:edit' %}" class="badge badge-danger align-self-center">Edit</a>
+                    <a href="{% url 'users:edit' %}" class="badge badge-info align-self-center">Edit</a>
+                    <a href="{% url 'users:edit' %}" class="badge badge-danger align-self-center">Remove</a>
                 </span>
                 {% endif %}
                 {% elif user == request.user %}

@@ -251,6 +251,32 @@ class EducationUpdateView(LoginRequiredMixin, UpdateView):
 
 
 @login_required(login_url="/users/login/")
+def delete_workplace(request):
+    if request.user.is_authenticated:
+        user = request.user
+        try:
+            work_place = WorkPlace.objects.get(user=user)
+            work_place.delete()
+            return redirect(reverse("users:profile", kwargs={"slug": user.slug}))
+        except:
+            messages.add_message(request, messages.ERROR, "You visited an Invalid URL.")
+            return redirect("qnA:home")
+
+
+@login_required(login_url="/users/login/")
+def delete_education(request):
+    if request.user.is_authenticated:
+        user = request.user
+        try:
+            education = Education.objects.get(user=user)
+            education.delete()
+            return redirect(reverse("users:profile", kwargs={"slug": user.slug}))
+        except:
+            messages.add_message(request, messages.ERROR, "You visited an Invalid URL.")
+            return redirect("qnA:home")
+
+
+@login_required(login_url="/users/login/")
 def profile_answer_pin(request, slug, is_pin, answer_pk):
     if request.user.is_authenticated:
         if request.user.slug == slug:

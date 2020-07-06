@@ -32,9 +32,11 @@ urlpatterns = [
     ),
     path("edit/", views.ProfileUpdateView.as_view(), name="edit"),
     path("add/workplace/", views.WorkPlaceFormAddView.as_view(), name="workplace_add"),
-    path("add/education/", views.EducationFormAddView.as_view(), name="education_add"),
     path("edit/workplace/", views.WorkPlaceUpdateView.as_view(), name="workplace_edit"),
+    path("delete/workplace/", views.delete_workplace, name="workplace_delete"),
+    path("add/education/", views.EducationFormAddView.as_view(), name="education_add"),
     path("edit/education/", views.EducationUpdateView.as_view(), name="education_edit"),
+    path("delete/education/", views.delete_education, name="education_delete",),
     path(
         "follow_toggle/<slug:slug>",
         views.follow_unfollow_users,
