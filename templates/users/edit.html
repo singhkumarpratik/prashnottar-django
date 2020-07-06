@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "users/base_form.html" %}
 {% load static %}
 {% block title %}
 {% if is_profile_update %}
@@ -7,32 +7,19 @@ Edit Profile
 Edit Credentials and Highlights
 {% endif %}
 {% endblock title %}
-{% block content %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-9 mt-5">
-            <div class="card gedf-card">
-                <div class="card-body text-center">
-                    {% if is_profile_update %}
-                    <img class="rounded-circle" height="100" width="100"
-                        src="{% if request.user.display_img %}{{request.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
-                    {% endif %}
-                    <form action="" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{form.as_p}}
-                        {% if is_profile_update %}
-                        <button class="btn btn-lg btn-danger btn-block">Update Profile</button>
-                        {% else %}
-                        <button class="btn btn-lg btn-danger btn-block">Update WorkPlace Details</button>
-                        {% endif %}
-                    </form>
-                    </p>
-                </div>
-            </div>
-            <p class="text-muted text-center mt-4">Made With ❤ By <a href="https: //github.com/singhkumarpratik">
-                    Pratik</a>
-            </p>
-        </div>
-    </div>
-</div>
-{% endblock content %}
+{% block edit_form %}
+{% if is_profile_update %}
+<img class="rounded-circle" height="100" width="100"
+    src="{% if request.user.display_img %}{{request.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+{% endif %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    {% if is_profile_update %}
+    <button class="btn btn-lg btn-danger btn-block">Update Profile</button>
+    {% else %}
+    <button class="btn btn-lg btn-danger btn-block">Update WorkPlace Details</button>
+    {% endif %}
+</form>
+</p>
+{% endblock edit_form %}

@@ -157,8 +157,8 @@
                 <h6 class="text-muted">Credentials & Highlights</h6>
             </div>
             <hr class="my-2">
-            {% if user.workplace_set.all %}
             <div class="workplace mb-2">
+                {% if user.workplace_set.all %}
                 <span><img src="{% static 'imgs/qnA/briefcase.svg' %}" alt="Works at"></span>
                 <span>{{user.workplace_set.all.0.company_name}}</span>
                 <span class="text-muted">
@@ -173,10 +173,16 @@
                     <a href="{% url 'users:workplace_edit' %}" class="badge badge-danger align-self-center">Edit</a>
                 </span>
                 {% endif %}
+                {% elif user == request.user %}
+                <span><img src="{% static 'imgs/qnA/briefcase.svg' %}" alt="Works at"></span>
+                <span>
+                    <a href="{% url 'users:workplace_add' %}" class="badge badge-primary align-self-center">Add
+                        Workplace</a>
+                </span>
+                {% endif %}
             </div>
-            {% endif %}
-            {% if user.education_set.all %}
             <div class="education mb-2">
+                {% if user.education_set.all %}
                 <span><img src="{% static 'imgs/qnA/building.svg' %}" alt="Works at"></span>
                 <span>{{user.education_set.all.0.school_name}}</span>
                 <span class="text-muted">
@@ -191,14 +197,31 @@
                     <a href="{% url 'users:education_edit' %}" class="badge badge-danger align-self-center">Edit</a>
                 </span>
                 {% endif %}
+                {% elif user == request.user %}
+                <span><img src="{% static 'imgs/qnA/building.svg' %}" alt="Works at"></span>
+                <span>
+                    <a href="{% url 'users:education_add' %}" class="badge badge-primary align-self-center">Add
+                        Education</a>
+                </span>
+                {% endif %}
             </div>
-            {% endif %}
-            {% if user.location %}
             <div class="location">
+                {% if user.location %}
                 <span><img src="{% static 'imgs/qnA/map.svg' %}" alt="Lives at"></span>
                 <span>{{user.location}}</span>
+                {% if user == request.user %}
+                <span>
+                    <a href="{% url 'users:edit' %}" class="badge badge-danger align-self-center">Edit</a>
+                </span>
+                {% endif %}
+                {% elif user == request.user %}
+                <span><img src="{% static 'imgs/qnA/map.svg' %}" alt="lives at"></span>
+                <span>
+                    <a href="{% url 'users:edit' %}" class="badge badge-primary align-self-center">Add
+                        Location</a>
+                </span>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
     </div>
 </div>

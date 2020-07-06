@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-9 mt-5">
+            <div class="card gedf-card">
+                <div class="card-body text-center">
+                    {% block edit_form %}{% endblock edit_form %}
+                </div>
+            </div>
+            <p class="text-muted text-center mt-4">Made With ❤ By <a href="https: //github.com/singhkumarpratik">
+                    Pratik</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock content %}

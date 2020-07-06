@@ -152,27 +152,99 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
+class WorkPlaceFormAddView(LoginRequiredMixin, FormView):
+    login_url = "/users/login/"
+    template_name = "qnA/qnA.html"
+    form_class = WorkPlaceForm
+
+    def form_valid(self, form):
+        work_place = form.save(commit=False)
+        if work_place.start_year > work_place.end_year:
+            messages.add_message(
+                self.request,
+                messages.ERROR,
+                "Start year cannot be greater than end year.",
+            )
+            return redirect("users:workplace_add")
+        work_place.user = self.request.user
+        work_place.save()
+        return redirect(
+            reverse("users:profile", kwargs={"slug": self.request.user.slug})
+        )
+
+
 class WorkPlaceUpdateView(LoginRequiredMixin, UpdateView):
-    template_name = "users/edit.html"
+    template_name = "qnA/qnA.html"
     model = WorkPlace
     form_class = WorkPlaceForm
     login_url = "/users/login/"
 
+    def form_valid(self, form):
+        work_place = form.save(commit=False)
+        if work_place.start_year > work_place.end_year:
+            messages.add_message(
+                self.request,
+                messages.ERROR,
+                "Start year cannot be greater than end year.",
+            )
+            return redirect("users:workplace_edit")
+        work_place.user = self.request.user
+        work_place.save()
+        return redirect(
+            reverse("users:profile", kwargs={"slug": self.request.user.slug})
+        )
+
     def get_object(self, queryset=None):
-        return self.model.objects.get(pk=self.request.user.pk)
+        return self.model.objects.get(user=self.request.user)
 
     def get_success_url(self, **kwargs):
         return reverse_lazy("users:profile", args=(self.request.user.slug,),)
 
 
+class EducationFormAddView(LoginRequiredMixin, FormView):
+    login_url = "/users/login/"
+    template_name = "qnA/qnA.html"
+    form_class = EducationForm
+
+    def form_valid(self, form):
+        education = form.save(commit=False)
+        if education.start_year > education.end_year:
+            messages.add_message(
+                self.request,
+                messages.ERROR,
+                "Start year cannot be greater than end year.",
+            )
+            return redirect("users:education_add")
+        education.user = self.request.user
+        education.save()
+        return redirect(
+            reverse("users:profile", kwargs={"slug": self.request.user.slug})
+        )
+
+
 class EducationUpdateView(LoginRequiredMixin, UpdateView):
-    template_name = "users/edit.html"
+    template_name = "qnA/qnA.html"
     model = Education
     form_class = EducationForm
     login_url = "/users/login/"
 
     def get_object(self, queryset=None):
-        return self.model.objects.get(pk=self.request.user.pk)
+        return self.model.objects.get(user=self.request.user)
+
+    def form_valid(self, form):
+        education = form.save(commit=False)
+        if education.start_year > education.end_year:
+            messages.add_message(
+                self.request,
+                messages.ERROR,
+                "Start year cannot be greater than end year.",
+            )
+            return redirect("users:education_edit")
+        education.user = self.request.user
+        education.save()
+        return redirect(
+            reverse("users:profile", kwargs={"slug": self.request.user.slug})
+        )
 
     def get_success_url(self, **kwargs):
         return reverse_lazy("users:profile", args=(self.request.user.slug,),)

@@ -1,32 +1,15 @@
-{% extends "base.html" %}
+{% extends "users/base_form.html" %}
 {% load static %}
-{% block content %}
-{% block buttons %}
-{% endblock buttons %}
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6 mt-5">
-            <div class="card gedf-card">
-                <div class="card-body text-center">
-                    {% block img %}
-                    <img class="mb-4" src="{% static 'imgs/logo.png' %}" height="40">
-                    {% endblock img %}
-                    {% block form %}
-                    <form action="" method="POST">
-                        {% csrf_token %}
-                        {{form.as_p}}
-                        {% block btn %}{% endblock btn %}
-                    </form>
-                    {% endblock form %}
-                    {% block msg %}{% endblock msg %}
-                    {% block footer %}
-                    <p class="text-muted">Made With ❤ By <a href="https: //github.com/singhkumarpratik">
-                            Pratik</a>
-                    </p>
-                    {% endblock footer %}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock content %}
+{% block edit_form %}
+{% block img %}
+<img class="mb-4" src="{% static 'imgs/logo.png' %}" height="40">
+{% endblock img %}
+{% block form %}
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form.as_p}}
+    {% block btn %}{% endblock btn %}
+</form>
+{% endblock form %}
+{% block msg %}{% endblock msg %}
+{% endblock edit_form %}

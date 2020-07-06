@@ -31,6 +31,8 @@ urlpatterns = [
         name="following",
     ),
     path("edit/", views.ProfileUpdateView.as_view(), name="edit"),
+    path("add/workplace/", views.WorkPlaceFormAddView.as_view(), name="workplace_add"),
+    path("add/education/", views.EducationFormAddView.as_view(), name="education_add"),
     path("edit/workplace/", views.WorkPlaceUpdateView.as_view(), name="workplace_edit"),
     path("edit/education/", views.EducationUpdateView.as_view(), name="education_edit"),
     path(

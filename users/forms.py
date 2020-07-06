@@ -1,4 +1,6 @@
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core import validators
 from django import forms
 from .models import User, WorkPlace, Education
 
@@ -64,12 +66,14 @@ class RegisterForm(forms.Form):
         widget=forms.PasswordInput(
             attrs={"class": "form-control", "placeholder": "Enter Password"}
         ),
+        validators=[validate_password],
     )
     password1 = forms.CharField(
         label="Confirm password",
         widget=forms.PasswordInput(
             attrs={"class": "form-control", "placeholder": "Confirm Password"}
         ),
+        validators=[validate_password],
     )
 
     def clean_email(self):
@@ -119,7 +123,7 @@ class ProfileForm(forms.ModelForm):
                 attrs={"class": "form-control", "placeholder": "Enter Last Name"}
             ),
             "location": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Enter Last Name"}
+                attrs={"class": "form-control", "placeholder": "Enter Location"}
             ),
             "bio": forms.Textarea(
                 attrs={"class": "form-control", "placeholder": "Enter Bio", "rows": 3,}
@@ -163,7 +167,7 @@ class EducationForm(forms.ModelForm):
         )
         widgets = {
             "school_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Enter Company Name"}
+                attrs={"class": "form-control", "placeholder": "Enter School Name"}
             ),
             "start_year": forms.Select(attrs={"class": "form-control",}),
             "end_year": forms.Select(attrs={"class": "form-control",}),
