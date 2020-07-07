@@ -10,5 +10,8 @@ def get_topics(text):
         + RAKE.GoogleSearchStopList()
     )
     Rake = RAKE.Rake(stop_lists)
-    topics = [x.title() for x, _ in (Rake.run(text)[:2])]
+    topics = []
+    for x, _ in Rake.run(text)[:2]:
+        words = x.split()
+        topics.extend(words)
     return topics

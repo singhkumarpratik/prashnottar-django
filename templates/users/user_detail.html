@@ -162,10 +162,12 @@
                 <span><img src="{% static 'imgs/qnA/briefcase.svg' %}" alt="Works at"></span>
                 <span>{{user.workplace_set.all.0.position}} at {{user.workplace_set.all.0.company_name}}</span>
                 <span class="text-muted">
-                    {% if user.workplace_set.all.0.is_currently_working %}
+                    {% if user.workplace_set.all.0.start_year %}
+                    {% if user.workplace_set.all.0.is_currently_working or not user.workplace_set.all.0.end_year %}
                     ({{user.workplace_set.all.0.start_year}} - Present)
                     {% else %}
                     ({{user.workplace_set.all.0.start_year}} - {{user.workplace_set.all.0.end_year}})
+                    {% endif %}
                     {% endif %}
                 </span>
                 {% if user == request.user %}

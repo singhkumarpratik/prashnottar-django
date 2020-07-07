@@ -159,13 +159,14 @@ class WorkPlaceFormAddView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         work_place = form.save(commit=False)
-        if work_place.start_year > work_place.end_year:
-            messages.add_message(
-                self.request,
-                messages.ERROR,
-                "Start year cannot be greater than end year.",
-            )
-            return redirect("users:workplace_add")
+        if work_place.start_year:
+            if work_place.start_year > work_place.end_year:
+                messages.add_message(
+                    self.request,
+                    messages.ERROR,
+                    "Start year cannot be greater than end year.",
+                )
+                return redirect("users:workplace_add")
         work_place.user = self.request.user
         work_place.save()
         return redirect(
@@ -181,11 +182,17 @@ class WorkPlaceUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         work_place = form.save(commit=False)
-        if work_place.start_year > work_place.end_year:
+        if work_place.start_year and work_place.end_year:
+            if work_place.start_year > work_place.end_year:
+                messages.add_message(
+                    self.request,
+                    messages.ERROR,
+                    "Start year cannot be greater than end year.",
+                )
+                return redirect("users:workplace_edit")
+        elif not work_place.start_year and work_place.end_year:
             messages.add_message(
-                self.request,
-                messages.ERROR,
-                "Start year cannot be greater than end year.",
+                self.request, messages.ERROR, "Enter start year.",
             )
             return redirect("users:workplace_edit")
         work_place.user = self.request.user

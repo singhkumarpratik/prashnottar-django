@@ -65,7 +65,7 @@ class QuestionDetailView(DetailView):
                 pk=self.get_object().pk
             )
             for match in matches:
-                if len(related_questions) != 8:
+                if len(related_questions) != 8 and match not in related_questions:
                     related_questions.append(match)
                 else:
                     max_matches = True
