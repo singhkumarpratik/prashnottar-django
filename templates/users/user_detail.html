@@ -161,15 +161,15 @@
                 {% if user.workplace_set.all %}
                 <span><img src="{% static 'imgs/qnA/briefcase.svg' %}" alt="Works at"></span>
                 <span>{{user.workplace_set.all.0.position}} at {{user.workplace_set.all.0.company_name}}</span>
+                {% if user.workplace_set.all.0.start_year %}
                 <span class="text-muted">
-                    {% if user.workplace_set.all.0.start_year %}
                     {% if user.workplace_set.all.0.is_currently_working or not user.workplace_set.all.0.end_year %}
                     ({{user.workplace_set.all.0.start_year}} - Present)
                     {% else %}
                     ({{user.workplace_set.all.0.start_year}} - {{user.workplace_set.all.0.end_year}})
                     {% endif %}
-                    {% endif %}
                 </span>
+                {% endif %}
                 {% if user == request.user %}
                 <span>
                     <a href="{% url 'users:workplace_edit' %}" class="badge badge-info align-self-center">Edit</a>
@@ -187,14 +187,16 @@
             <div class="education mb-2">
                 {% if user.education_set.all %}
                 <span><img src="{% static 'imgs/qnA/building.svg' %}" alt="Works at"></span>
-                <span>{{user.education_set.all.0.school_name}}</span>
+                <span>Studied At {{user.education_set.all.0.school_name}}</span>
+                {% if user.education_set.all.0.start_year %}
                 <span class="text-muted">
-                    {% if user.education_set.all.0.is_currently_studying %}
+                    {% if user.education_set.all.0.is_currently_studying or not user.education_set.all.0.end_year %}
                     ({{user.education_set.all.0.start_year}} - Present)
                     {% else %}
                     ({{user.education_set.all.0.start_year}} - {{user.education_set.all.0.end_year}})
                     {% endif %}
                 </span>
+                {% endif %}
                 {% if user == request.user %}
                 <span>
                     <a href="{% url 'users:education_edit' %}" class="badge badge-info align-self-center">Edit</a>
@@ -212,7 +214,7 @@
             <div class="location">
                 {% if user.location %}
                 <span><img src="{% static 'imgs/qnA/map.svg' %}" alt="Lives at"></span>
-                <span>{{user.location}}</span>
+                <span>Lives in {{user.location}}</span>
                 {% if user == request.user %}
                 <span>
                     <a href="{% url 'users:edit' %}" class="badge badge-info align-self-center">Edit</a>

@@ -167,6 +167,11 @@ class WorkPlaceFormAddView(LoginRequiredMixin, FormView):
                     "Start year cannot be greater than end year.",
                 )
                 return redirect("users:workplace_add")
+        elif not work_place.start_year and work_place.end_year:
+            messages.add_message(
+                self.request, messages.ERROR, "Enter start year.",
+            )
+            return redirect("users:workplace_add")
         work_place.user = self.request.user
         work_place.save()
         return redirect(
@@ -215,13 +220,19 @@ class EducationFormAddView(LoginRequiredMixin, FormView):
 
     def form_valid(self, form):
         education = form.save(commit=False)
-        if education.start_year > education.end_year:
+        if education.start_year:
+            if education.start_year > education.end_year:
+                messages.add_message(
+                    self.request,
+                    messages.ERROR,
+                    "Start year cannot be greater than end year.",
+                )
+                return redirect("users:education_add")
+        elif not education.start_year and education.end_year:
             messages.add_message(
-                self.request,
-                messages.ERROR,
-                "Start year cannot be greater than end year.",
+                self.request, messages.ERROR, "Enter start year.",
             )
-            return redirect("users:education_add")
+            return redirect("users:education_edit")
         education.user = self.request.user
         education.save()
         return redirect(
@@ -240,11 +251,17 @@ class EducationUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         education = form.save(commit=False)
-        if education.start_year > education.end_year:
+        if education.start_year and education.end_year:
+            if education.start_year > education.end_year:
+                messages.add_message(
+                    self.request,
+                    messages.ERROR,
+                    "Start year cannot be greater than end year.",
+                )
+                return redirect("users:education_edit")
+        elif not education.start_year and education.end_year:
             messages.add_message(
-                self.request,
-                messages.ERROR,
-                "Start year cannot be greater than end year.",
+                self.request, messages.ERROR, "Enter start year.",
             )
             return redirect("users:education_edit")
         education.user = self.request.user
