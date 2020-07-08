@@ -7,48 +7,25 @@
 {% for item in comments %}
 <div class="media">
     <a name="c{{ item.comment.id }}"></a>
-    {{ item.comment.user_email|xtd_comment_gravatar }}
+    <a href="{% url 'users:profile' item.comment.user.slug %}">
+        <img class="rounded-circle mr-2" width="45" height="45"
+            src="{% if item.comment.user.display_img %}{{item.comment.user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+    </a>
     <div class="media-body">
         <div class="comment pb-3">
             <h6 class="mb-1 small d-flex">
-                <div class="mr-auto">
-                    {{ item.comment.submit_date|localize }}&nbsp;-&nbsp;{% if item.comment.url and not item.comment.is_removed %}<a
-                        href="{{ item.comment.url }}"
-                        target="_new">{% endif %}{{ item.comment.name }}{% if item.comment.url %}</a>{% endif %}{% if item.comment.user and item.comment.user|has_permission:"django_comments.can_moderate" %}&nbsp;<span
-                        class="badge badge-secondary">{% trans "moderator" %}</span>{% endif %}&nbsp;&nbsp;<a
-                        class="permalink" title="{% trans 'comment permalink' %}"
-                        href="{% get_comment_permalink item.comment %}">¶</a></div>
-                <span>
-                    {% if not item.comment.is_removed %}
-                    {% if perms.comments.can_moderate %}
-                    {% if item.flagged_count %}
-                    <span class="badge badge-danger"
-                        title="{% blocktrans count counter=item.flagged_count %}A user has flagged this comment as inappropriate.{% plural %}{{ counter }} users have flagged this comment as inappropriate.{% endblocktrans %}">{{ item.flagged_count }}</span>
-                    {% endif %}
-                    {% endif %}
-                    {% if allow_flagging and item.flagged %}
-                    <i class="fas fa-flag text-danger" title="{% trans 'comment flagged' %}"></i>
-                    {% elif allow_flagging %}
-                    <a class="mutedlink" href="{% url 'comments-flag' item.comment.pk %}">
-                        <i class="fas fa-flag" title="{% trans 'flag comment' %}"></i></a>
-                    {% endif %}
-                    {% if perms.comments.can_moderate %}
-                    <a class="mutedlink" href="{% url 'comments-delete' item.comment.pk %}"><i class="fas fa-trash-alt"
-                            title="{% trans 'remove comment' %}"></i></a>
-                    {% endif %}
-                    {% endif %}
-                </span>
+                <div class="mr-auto d-flex">
+                    <p class="font-weight-bold mr-1">
+                        <a href="{% url 'users:profile' item.comment.user.slug %}" class="text-decoration-none">
+                            {{ item.comment.name }}
+                        </a>
+                    </p>
+                    <p>on {{ item.comment.submit_date|localize }}</p>
+                </div>
             </h6>
-            {% if item.comment.is_removed %}
-            <p class="text-muted{% if not allow_feedback and not item.comment.allow_thread %} pb-3{% endif %}">
-                <em>{% trans "This comment has been removed." %}</em></p>
-            {% else %}
             <div class="content{% if not allow_feedback and not item.comment.allow_thread %} pb-3{% endif %}">
                 {% include "includes/django_comments_xtd/comment_content.html" with content=item.comment.comment %}
             </div>
-            {% if allow_feedback %}
-            {% include "includes/django_comments_xtd/user_feedback.html" %}
-            {% endif %}
             {% if item.comment.allow_thread and not item.comment.is_removed %}
 
             {% if user.is_authenticated %}
@@ -57,8 +34,6 @@
             {% else %}
             <a href="{% url 'users:login' %}">Login to Reply</a>
             {% endif %}
-            {% endif %}
-
             {% endif %}
             <h4 id="score_comment{{item.comment.id}}">{{item.comment.vote_score}}</h4>
             <div class="score-form" data-pk="{{item.comment.id}}" data-is-comment="True">
