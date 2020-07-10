@@ -11,7 +11,6 @@ $('input[name="request"]').click(function (e) {
                     'disabled': true,
                     'value': 'Request Sent',
                 });
-                console.log("hi");
             }
         },
         error: function (response) {

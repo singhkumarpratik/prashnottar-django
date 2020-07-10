@@ -37,4 +37,9 @@ urlpatterns = [
     path("<int:question_id>/vote", views.vote, name="question-vote"),
     path("question/<slug:slug>/<int:question_id>/vote/", views.vote, name="vote"),
     path("search/", views.QnaListView.as_view(), name="search"),
+    path(
+        "question/<slug:slug>/request/user/",
+        views.RequestAnswerListView.as_view(),
+        name="search-user",
+    ),
 ]

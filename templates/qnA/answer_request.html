@@ -13,12 +13,18 @@
                 <hr>
             </div>
             <hr>
-            <div class="search text-center">
-                TODO: searchbar
+            <div class="row justify-content-center align-items-center">
+                <div class="col col-sm-6 col-md-6">
+                    <form class="d-flex" action="{% url 'qnA:search-user' question.slug %}" method="get">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search Users" name="user"
+                            value="{{request.GET.user}}" required>
+                        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit">Search</button>
+                    </form>
+                </div>
             </div>
             <hr>
             {% block profile %}
-
+            {{users_list}}
             {% if suggested_users %}
             <h5 class="text-muted mb-3">Suggested Users</h5>
             {% for suggested_user,is_requested_question in suggested_users.items %}
@@ -62,8 +68,54 @@
             </div>
             {% endif %}
             {% endfor %}
-            {% endif %}
+            {% else %}
+            <h5 class="text-muted mb-3">Search Results</h5>
+            {% if user_l %}
+            {% for user,is_requested_question in user_l.items %}
 
+            {% if user != request.user %}
+            <div class="card mb-2">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="mr-2">
+                                <img class="rounded-circle" width="45" height="45"
+                                    src="{% if user.display_img %}{{user.display_img.url}} {% else %} {% static 'imgs/no_display_img.jpg' %} {% endif %}">
+                            </div>
+                            <div class="ml-2">
+                                <div class="p m-0">
+                                    <b>
+                                        <a href="#">
+                                            {{user.first_name}}
+                                            {{user.last_name}}
+                                        </a>
+                                    </b>
+                                </div>
+                                <div class="h7 text-muted">{{user.bio}}</div>
+                            </div>
+                        </div>
+                        <div>
+
+                            {% if is_requested_question %}
+                            <input type="button" value="Request Sent" name="request"
+                                class="btn btn-outline-danger request{{user.pk}}{{question.pk}}" data-pk="{{user.pk}}"
+                                data-qpk="{{question.pk}}" disabled />
+                            {% else %}
+                            <input type="button" value="Request" name="request"
+                                class="btn btn-outline-danger request{{user.pk}}{{question.pk}}" data-pk="{{user.pk}}"
+                                data-qpk="{{question.pk}}" />
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            {% else %}
+            <h6 class="text-muted mb-3">No such user found</h6>
+            {% endif %}
+            {% endif %}
             {% endblock profile %}
         </div>
     </div>

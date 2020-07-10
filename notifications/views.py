@@ -61,7 +61,6 @@ class NotificationDetailView(LoginRequiredMixin, DetailView):
         context["from_user"] = from_user
         context["question"] = question
         return context
-        print(from_user, question, ans)
 
 
 class NotificationAnswerListView(LoginRequiredMixin, ListView):

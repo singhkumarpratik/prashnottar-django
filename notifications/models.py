@@ -78,22 +78,7 @@ def notification(sender, **kwargs):
         except:
             from_user = kwargs.get("instance").from_user
             to_user = kwargs.get("instance").to_user
-            print(from_user, to_user)
-            print("hi")
             msg = f"{from_user.first_name} {from_user.last_name} started following you"
             Notification.objects.create(
                 from_user=from_user, to_user=to_user, msg=msg,
             )
-
-
-# @receiver(post_save, sender=Follow)
-# def follow_notification(sender, **kwargs):
-#     if kwargs["created"]:
-#         from_user = kwargs.get("instance").from_user
-#         to_user = kwargs.get("instance").to_user
-#         print(from_user, to_user)
-#         print("hi")
-#         msg = f"{from_user.first_name} {from_user.last_name} started following you"
-#         Notification.objects.create(
-#             from_user=from_user, to_user=to_user, msg=msg,
-#         )

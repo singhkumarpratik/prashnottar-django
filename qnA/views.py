@@ -10,6 +10,7 @@ from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from comments.models import MyComment
 from .models import *
 from .forms import *
@@ -126,7 +127,6 @@ class AnswerView(LoginRequiredMixin, FormView):
         answer.user = self.request.user
         answer.question = question
         answer.save()
-        print(question.user)
         if not answer.is_anonymous:
             followers = Follow.objects.filter(to_user=self.request.user)
             for follower in followers:
@@ -188,7 +188,6 @@ class AnswerUpdateView(LoginRequiredMixin, UpdateView):
             raise Http404
 
     def get_success_url(self, **kwargs):
-        print(self.object.question.slug)
         return reverse_lazy(
             "qnA:answer_detail",
             args=(
@@ -213,7 +212,6 @@ class AnswerDeleteView(LoginRequiredMixin, DeleteView):
             raise Http404
 
     def get_success_url(self, **kwargs):
-        print(self.object.question.slug)
         return reverse_lazy("qnA:question_detail", args=(self.object.question.slug,))
 
 
@@ -226,32 +224,62 @@ class RequestAnswerListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         question_slug = self.kwargs["slug"]
         question = Question.objects.get(slug=question_slug)
-        answer_users = []
-        for answer in question.answer_set.all():
-            answer_users.append(answer.user)
-        question_topics = question.topics.all()
-        suggested_users = {}
-        for topic in question_topics:
-            """find similar questions"""
-            matches = Question.objects.filter(title__icontains=topic).exclude(
-                slug=question_slug
-            )[:10]
-            for match in matches:
-                """for each similar questions, get those question's answers's users and add them to suggested_user list"""
-                answers = match.answer_set.all().order_by("-vote_score")
-                for answer in answers:
-                    if answer.user not in answer_users and answer.user != question.user:
-                        is_requested_question = Notification.objects.filter(
-                            from_user=self.request.user.pk,
-                            to_user=answer.user.pk,
-                            question=question,
-                            is_requested_question=True,
-                        )
-                        """checking if the request.user had already requested the answer"""
-                        is_requested_question = True if is_requested_question else False
-                        suggested_users[answer.user] = is_requested_question
+        try:
+            searched_user = self.request.GET.get("user")
+            try:
+                first_name, *_, last_name = searched_user.split()
+                users_list = User.objects.filter(
+                    first_name__contains=first_name, last_name__contains=last_name
+                )
+            except:
+                """ only one name entered """
+                users_list = User.objects.filter(
+                    Q(first_name__contains=searched_user)
+                    | Q(last_name__contains=searched_user)
+                )
+            user_l = {}
+            for user in users_list:
+                is_requested_question = Notification.objects.filter(
+                    from_user=self.request.user.pk,
+                    to_user=user.pk,
+                    question=question,
+                    is_requested_question=True,
+                )
+                user_l[user] = is_requested_question
+
+            context["user_l"] = user_l
+        except:
+            answer_users = []
+            for answer in question.answer_set.all():
+                answer_users.append(answer.user)
+            question_topics = question.topics.all()
+            suggested_users = {}
+            for topic in question_topics:
+                """find similar questions"""
+                matches = Question.objects.filter(title__icontains=topic).exclude(
+                    slug=question_slug
+                )[:10]
+                for match in matches:
+                    """for each similar questions, get those question's answers's users and add them to suggested_user list"""
+                    answers = match.answer_set.all().order_by("-vote_score")
+                    for answer in answers:
+                        if (
+                            answer.user not in answer_users
+                            and answer.user != question.user
+                        ):
+                            is_requested_question = Notification.objects.filter(
+                                from_user=self.request.user.pk,
+                                to_user=answer.user.pk,
+                                question=question,
+                                is_requested_question=True,
+                            )
+                            """checking if the request.user had already requested the answer"""
+                            is_requested_question = (
+                                True if is_requested_question else False
+                            )
+                            suggested_users[answer.user] = is_requested_question
+            context["suggested_users"] = suggested_users
         context["question"] = question
-        context["suggested_users"] = suggested_users
         return context
 
 
