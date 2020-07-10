@@ -24,7 +24,6 @@
             </div>
             <hr>
             {% block profile %}
-            {{users_list}}
             {% if suggested_users %}
             <h5 class="text-muted mb-3">Suggested Users</h5>
             {% for suggested_user,is_requested_question in suggested_users.items %}
