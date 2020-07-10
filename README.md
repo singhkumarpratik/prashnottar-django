@@ -21,8 +21,8 @@ Prashnottar, a Quora clone built using django.
 2. Install dependencies using `pip install -r requirements.txt`
 3. Migrate using `python manage.py migrate`
 4. Load fixtures using <br/>
-`python manage.py fixtures/users.json` <br/>
-`python manage.py fixtures/qnA.json` <br/>
+`python manage.py loaddata fixtures/users.json` <br/>
+`python manage.py loaddata fixtures/qnA.json` <br/>
 5. Run server using `python manage.py runserver`
 
 ## Demo
