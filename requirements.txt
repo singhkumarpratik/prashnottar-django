@@ -1,5 +1,5 @@
 asgiref==3.2.7
-Django==3.0.6
+Django==3.0.7
 django-autoslug==1.9.7
 django-comments-xtd==2.6.1
 django-contrib-comments==1.9.2
