@@ -6,7 +6,7 @@ django-contrib-comments==1.9.2
 django-js-asset==1.2.2
 django-summernote==0.8.11.6
 django-vote==2.2.0
-djangorestframework==3.11.0
+djangorestframework==3.11.2
 docutils==0.16
 gunicorn==20.0.4
 Pillow==7.1.2
